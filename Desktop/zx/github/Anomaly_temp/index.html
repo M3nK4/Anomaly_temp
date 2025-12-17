@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Anomaly Trading System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Source+Code+Pro:wght@400;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#FBAD60",
+            "glow-orange": "#FBAD60",
+            "background-light": "#efeee9",
+            "background-dark": "#292929",
+            "text-main-light": "#4a4a4a",
+            "text-sub-light": "#8d8d8d",
+            "text-main-dark": "#e0e0e0",
+            "text-sub-dark": "#a0a0a0",
+          },
+          fontFamily: {
+            display: ["Nunito", "sans-serif"],
+          },
+          boxShadow: {
+            'neu-flat-light': '6px 6px 16px #d1cfc4, -6px -6px 16px #ffffff',
+            'neu-pressed-light': 'inset 6px 6px 10px #d1cfc4, inset -6px -6px 10px #ffffff',
+            'neu-icon-light': '5px 5px 10px #d1cfc4, -5px -5px 10px #ffffff',
+            'neu-flat-dark': '6px 6px 16px #1b1b1b, -6px -6px 16px #373737',
+            'neu-pressed-dark': 'inset 6px 6px 10px #1b1b1b, inset -6px -6px 10px #373737',
+            'neu-icon-dark': '5px 5px 10px #1b1b1b, -5px -5px 10px #373737',
+            'glow-orange': '0 0 8px rgba(251, 173, 96, 0.6), 0 0 16px rgba(251, 173, 96, 0.4), 0 0 24px rgba(251, 173, 96, 0.2)',
+          }
+        },
+      },
+    };
+  </script>
+  <style>
+    body { font-family: 'Nunito', sans-serif; }
+
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #d1cfc4; border-radius: 4px; }
+    .dark ::-webkit-scrollbar-thumb { background: #373737; }
+
+    .loading-overlay {
+      position: fixed; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+    .loading-overlay.hidden { opacity: 0; visibility: hidden; }
+
+    .spinner {
+      width: 40px; height: 40px;
+      border: 3px solid #FFB366;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    #menuToggle { display: none; }
+    .menu-panel {
+      max-height: 0; overflow: hidden;
+      opacity: 0; visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    #menuToggle:checked ~ .menu-panel {
+      max-height: 280px; opacity: 1; visibility: visible;
+    }
+    .overlay {
+      position: fixed; inset: 0; z-index: 40;
+      opacity: 0; visibility: hidden;
+      background: rgba(0,0,0,0.2);
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+    #menuToggle:checked ~ .overlay { opacity: 1; visibility: visible; }
+
+    .hamburger span {
+      display: block; width: 100%; height: 2px;
+      border-radius: 2px; transition: all 0.3s ease;
+    }
+    #menuToggle:checked ~ header .hamburger span:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+    #menuToggle:checked ~ header .hamburger span:nth-child(2) { opacity: 0; }
+    #menuToggle:checked ~ header .hamburger span:nth-child(3) {
+      transform: rotate(-45deg) translate(5px, -5px);
+    }
+
+    @keyframes livePulse {
+      0% {
+        background: #16a34a;
+        box-shadow: 0 0 3px rgba(34, 197, 94, 0.6), 0 0 6px rgba(34, 197, 94, 0.3);
+      }
+      50% {
+        background: #4ade80;
+        box-shadow: 0 0 8px rgba(74, 222, 128, 1), 0 0 14px rgba(74, 222, 128, 0.8), 0 0 20px rgba(74, 222, 128, 0.5);
+      }
+      100% {
+        background: #16a34a;
+        box-shadow: 0 0 3px rgba(34, 197, 94, 0.6), 0 0 6px rgba(34, 197, 94, 0.3);
+      }
+    }
+    .live-pulse {
+      animation: livePulse 2s ease-in-out infinite;
+      position: relative;
+      top: -1px;
+    }
+
+    @keyframes chartPointPulse {
+      0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.7;
+        transform: scale(1.3);
+      }
+    }
+
+    .text-primary-glow {
+      color: #FBAD60;
+      text-shadow: 0 0 8px rgba(251, 173, 96, 0.9);
+    }
+    .dark .text-primary-glow {
+      color: #FBAD60;
+    }
+
+    .progress-container {
+      display: flex;
+      gap: 1.5rem;
+    }
+    @media (max-width: 640px) {
+      .progress-container {
+        flex-direction: column;
+        gap: 1rem;
+      }
+    }
+    .progress-track {
+      height: 6px;
+      border-radius: 10px;
+      box-shadow: inset 2px 2px 5px #d1cfc4, inset -2px -2px 5px #ffffff;
+      background: #e0e0e0;
+    }
+    .dark .progress-track {
+      background: #1f1f1f;
+      box-shadow: inset 2px 2px 5px #1b1b1b, inset -2px -2px 5px #373737;
+    }
+    .progress-fill {
+      height: 100%;
+      border-radius: 10px;
+      transition: width 1s ease-out;
+      background: #FBAD60;
+      box-shadow: 0 0 6px rgba(251, 173, 96, 0.8);
+    }
+    .dark .progress-fill {
+      background: #FBAD60;
+    }
+
+    /* Page sections */
+    .page-section {
+      display: none;
+    }
+    .page-section.active {
+      display: block;
+    }
+
+    /* Active navigation state */
+    .nav-item.active {
+      box-shadow: inset 6px 6px 10px #d1cfc4, inset -6px -6px 10px #ffffff;
+    }
+    .dark .nav-item.active {
+      box-shadow: inset 6px 6px 10px #1b1b1b, inset -6px -6px 10px #373737;
+    }
+    .nav-item.active .material-icons-round {
+      color: #FBAD60;
+      text-shadow: 0 0 8px rgba(251, 173, 96, 0.9);
+    }
+    .dark .nav-item.active .material-icons-round {
+      color: #FBAD60;
+    }
+
+    /* Text Scramble Effect */
+    .title-monospace {
+      font-family: 'Source Code Pro', monospace;
+      font-weight: 700;
+    }
+    #scramble-word {
+      display: inline-block;
+    }
+    #scramble-word span {
+      display: inline-block;
+    }
+
+    /* Logic Page Styles */
+    .logic-tf-card {
+      cursor: pointer;
+      transition: box-shadow 0.2s ease;
+    }
+    .logic-tf-btn {
+      transition: all 0.2s ease;
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark transition-colors duration-300 min-h-screen">
+
+  <div class="loading-overlay bg-background-light dark:bg-background-dark" id="loadingOverlay">
+    <div class="spinner"></div>
+    <p class="mt-4 text-sm font-semibold text-text-sub-light dark:text-text-sub-dark">Loading...</p>
+  </div>
+
+  <input type="checkbox" id="menuToggle">
+  <label class="overlay" for="menuToggle"></label>
+
+  <header class="fixed top-0 left-0 right-0 z-50 px-4 py-3 bg-background-light dark:bg-background-dark">
+    <div class="max-w-4xl mx-auto flex items-center justify-between">
+      <!-- Desktop Navigation (centered, hidden on mobile) -->
+      <nav class="hidden lg:flex items-center space-x-2 mx-auto">
+        <span onclick="navigateTo('home')" data-page="home" class="nav-item active flex items-center space-x-2 px-3 py-2 rounded-xl cursor-pointer hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow">
+          <span class="material-icons-round text-base">home</span>
+          <span class="font-semibold text-sm">Home</span>
+        </span>
+        <span onclick="navigateTo('wallet')" data-page="wallet" class="nav-item flex items-center space-x-2 px-3 py-2 rounded-xl cursor-pointer hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow">
+          <span class="material-icons-round text-text-sub-light dark:text-text-sub-dark text-base">account_balance_wallet</span>
+          <span class="font-semibold text-sm">Wallet</span>
+        </span>
+        <span onclick="navigateTo('logic')" data-page="logic" class="nav-item flex items-center space-x-2 px-3 py-2 rounded-xl cursor-pointer hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow">
+          <span class="material-icons-round text-text-sub-light dark:text-text-sub-dark text-base">psychology</span>
+          <span class="font-semibold text-sm">Logic</span>
+        </span>
+        <span onclick="navigateTo('info')" data-page="info" class="nav-item flex items-center space-x-2 px-3 py-2 rounded-xl cursor-pointer hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow">
+          <span class="material-icons-round text-text-sub-light dark:text-text-sub-dark text-base">info</span>
+          <span class="font-semibold text-sm">Info</span>
+        </span>
+      </nav>
+
+      <!-- Mobile menu button (visible on mobile only) -->
+      <label class="lg:hidden w-10 h-10 rounded-xl flex items-center justify-center shadow-neu-icon-light dark:shadow-neu-icon-dark hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark cursor-pointer transition-shadow bg-background-light dark:bg-background-dark" for="menuToggle">
+        <div class="hamburger w-5 h-4 flex flex-col justify-between">
+          <span class="bg-text-main-light dark:bg-text-main-dark"></span>
+          <span class="bg-text-main-light dark:bg-text-main-dark"></span>
+          <span class="bg-text-main-light dark:bg-text-main-dark"></span>
+        </div>
+      </label>
+
+      <!-- Theme toggle (always on the right) -->
+      <button onclick="toggleDarkMode()" class="w-10 h-10 rounded-xl flex items-center justify-center shadow-neu-icon-light dark:shadow-neu-icon-dark hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow bg-background-light dark:bg-background-dark ml-auto lg:ml-0">
+        <span class="material-icons-round text-text-sub-light dark:hidden">dark_mode</span>
+        <span class="material-icons-round text-primary-glow hidden dark:block">light_mode</span>
+      </button>
+    </div>
+  </header>
+
+  <nav class="menu-panel fixed top-16 right-4 w-44 z-50 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark" id="menu">
+    <div class="p-2">
+      <span onclick="navigateTo('home')" data-page="home" class="nav-item active flex items-center space-x-3 px-4 py-3 rounded-xl cursor-pointer hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow">
+        <span class="material-icons-round text-sm">home</span>
+        <span class="font-semibold text-sm">Home</span>
+      </span>
+      <span onclick="navigateTo('wallet')" data-page="wallet" class="nav-item flex items-center space-x-3 px-4 py-3 rounded-xl cursor-pointer hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow">
+        <span class="material-icons-round text-text-sub-light dark:text-text-sub-dark text-sm">account_balance_wallet</span>
+        <span class="font-semibold text-sm">Wallet</span>
+      </span>
+      <span onclick="navigateTo('logic')" data-page="logic" class="nav-item flex items-center space-x-3 px-4 py-3 rounded-xl cursor-pointer hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow">
+        <span class="material-icons-round text-text-sub-light dark:text-text-sub-dark text-sm">psychology</span>
+        <span class="font-semibold text-sm">Logic</span>
+      </span>
+      <span onclick="navigateTo('info')" data-page="info" class="nav-item flex items-center space-x-3 px-4 py-3 rounded-xl cursor-pointer hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow">
+        <span class="material-icons-round text-text-sub-light dark:text-text-sub-dark text-sm">info</span>
+        <span class="font-semibold text-sm">Info</span>
+      </span>
+    </div>
+  </nav>
+
+  <main class="pt-20 pb-28 px-4">
+    <div class="max-w-4xl mx-auto">
+
+      <!-- HOME PAGE -->
+      <section id="page-home" class="page-section active">
+        <!-- Project Title -->
+        <div class="mb-6 text-center">
+          <h1 class="text-3xl md:text-4xl mb-3 title-monospace" style="word-spacing: -0.5em; letter-spacing: 0.05em;">The <span id="scramble-word"></span> Protocol</h1>
+          <p class="text-base md:text-xl font-bold mb-0 text-text-main-light dark:text-text-main-dark">Fully autonomous trading system agent</p>
+          <p class="text-base italic text-text-sub-light dark:text-text-sub-dark">where change aligns before price defines</p>
+        </div>
+
+        <!-- Chart -->
+        <div class="mb-8">
+          <div class="p-6 rounded-[2rem] shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
+            <div class="flex justify-between items-center mb-4">
+              <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full shadow-neu-pressed-light dark:shadow-neu-pressed-dark flex items-center justify-center text-primary-glow">
+                  <span class="material-icons-round">show_chart</span>
+                </div>
+                <div>
+                  <h3 class="text-base font-bold">PNL Equity Line</h3>
+                  <div class="flex items-center space-x-2">
+                    <div class="w-2 h-2 rounded-full live-pulse"></div>
+                    <span class="text-xs font-bold text-primary-glow" id="home-data-status">LIVE</span>
+                    <span class="text-xs font-semibold text-text-sub-light dark:text-text-sub-dark">uptime <span id="home-header-uptime">--</span></span>
+                  </div>
+                </div>
+              </div>
+              <div class="flex space-x-2">
+                <button class="timeframe-btn px-3 py-1.5 rounded-xl text-[10px] font-bold shadow-neu-pressed-light dark:shadow-neu-pressed-dark text-primary-glow bg-background-light dark:bg-background-dark active" data-timeframe="ALL">ALL</button>
+                <button class="timeframe-btn px-3 py-1.5 rounded-xl text-[10px] font-bold shadow-neu-flat-light dark:shadow-neu-flat-dark text-text-sub-light dark:text-text-sub-dark hover:text-primary-glow transition-colors bg-background-light dark:bg-background-dark" data-timeframe="1M">1M</button>
+                <button class="timeframe-btn px-3 py-1.5 rounded-xl text-[10px] font-bold shadow-neu-flat-light dark:shadow-neu-flat-dark text-text-sub-light dark:text-text-sub-dark hover:text-primary-glow transition-colors bg-background-light dark:bg-background-dark" data-timeframe="1W">1W</button>
+              </div>
+            </div>
+            <div class="h-64 md:h-80 lg:h-96">
+              <canvas id="pnlChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project Description -->
+        <div class="p-6 rounded-[2rem] shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
+          <h3 class="text-lg font-bold mb-4">The Concept</h3>
+          <div class="text-sm text-text-sub-light dark:text-text-sub-dark leading-relaxed space-y-4">
+            <p>Anomaly is a market-adaptive trading system designed to outperform the underlying asset by maintaining continuous alignment with changing market conditions.</p>
+
+            <p>Instead of operating through discrete trades, Anomaly follows a structural approach. It does not depend on traditional mechanisms such as entry signals, stop losses, or take profit levels. These concepts assume static decisions in a dynamic environment. Anomaly is built on a different assumption: that market conditions evolve continuously and must be managed as such.</p>
+
+            <p>For this reason, the system remains permanently exposed to the market. It is always positioned, either long or short, and expresses its directional conviction through dynamic adjustment of exposure rather than through position closure. Leverage is increased when conditions strengthen, reduced when coherence weakens, and reversed when the underlying market structure changes.</p>
+
+            <p>This design shifts the focus from trade execution to exposure management. Instead of reacting to specific price levels, Anomaly monitors transitions in market behavior and adapts its positioning accordingly. The outcome is not a sequence of isolated trades, but a single, continuously evolving position that reflects the current state of the market.</p>
+
+            <p>Anomaly does not aim to predict individual moves or optimize entry timing. Its objective is relative performance: capturing value across both expansion and contraction phases of the market by remaining consistently aligned with structural change.</p>
+
+            <p>In this sense, Anomaly is not a conventional trading strategy, but a technological framework for sustained market engagement.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- WALLET PAGE -->
+      <section id="page-wallet" class="page-section">
+        <!-- Wallet Balance -->
+        <div class="mb-6">
+          <div class="p-6 rounded-[2rem] shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
+            <span class="text-xs font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark">Wallet Balance</span>
+            <p class="text-3xl font-extrabold" id="data-value">$0.00</p>
+          </div>
+        </div>
+
+        <!-- Stats: Side, PNL, Leverage -->
+        <div class="mb-6">
+          <div class="grid grid-cols-3 gap-4">
+            <div class="p-4 rounded-3xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark text-center">
+              <div class="w-10 h-10 mx-auto rounded-full shadow-neu-pressed-light dark:shadow-neu-pressed-dark flex items-center justify-center text-primary-glow mb-2">
+                <span class="material-icons-round text-lg">swap_vert</span>
+              </div>
+              <p class="text-[10px] font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark">Side</p>
+              <p class="text-lg font-extrabold" id="data-side">--</p>
+            </div>
+            <div class="p-4 rounded-3xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark text-center">
+              <div class="w-10 h-10 mx-auto rounded-full shadow-neu-pressed-light dark:shadow-neu-pressed-dark flex items-center justify-center text-primary-glow mb-2">
+                <span class="material-icons-round text-lg">account_balance</span>
+              </div>
+              <p class="text-[10px] font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark">PNL</p>
+              <p class="text-lg font-extrabold" id="data-pnl">--</p>
+            </div>
+            <div class="p-4 rounded-3xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark text-center">
+              <div class="w-10 h-10 mx-auto rounded-full shadow-neu-pressed-light dark:shadow-neu-pressed-dark flex items-center justify-center text-primary-glow mb-2">
+                <span class="material-icons-round text-lg">speed</span>
+              </div>
+              <p class="text-[10px] font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark">Leverage</p>
+              <p class="text-lg font-extrabold" id="data-lev">--</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress Bars -->
+        <div class="mb-6">
+          <div class="p-6 rounded-[2rem] shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
+            <div class="progress-container">
+              <div class="flex-1">
+                <div class="flex justify-between items-center mb-2">
+                  <div class="flex items-center space-x-2">
+                    <span class="text-xs font-bold text-text-main-light dark:text-text-main-dark">Margin</span>
+                    <span class="text-xs font-bold text-text-main-light dark:text-text-main-dark" id="data-mrg">0%</span>
+                  </div>
+                </div>
+                <div class="progress-track">
+                  <div class="progress-fill" id="data-mrg-bar" style="width: 0%"></div>
+                </div>
+              </div>
+              <div class="flex-1">
+                <div class="flex justify-between items-center mb-2">
+                  <div class="flex items-center space-x-2">
+                    <span class="text-xs font-bold text-text-main-light dark:text-text-main-dark">Liquidation</span>
+                    <span class="text-xs font-bold text-text-main-light dark:text-text-main-dark" id="data-liq">0%</span>
+                  </div>
+                </div>
+                <div class="progress-track">
+                  <div class="progress-fill" id="data-liq-bar" style="width: 0%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trade Insight -->
+        <div class="mb-6">
+          <div class="p-6 rounded-[2rem] shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
+            <div class="flex items-center space-x-3 mb-4">
+              <div class="w-10 h-10 rounded-full shadow-neu-pressed-light dark:shadow-neu-pressed-dark flex items-center justify-center text-primary-glow">
+                <span class="material-icons-round">insights</span>
+              </div>
+              <div>
+                <h3 class="text-base font-bold">Latest Trade Insight</h3>
+                <p class="text-xs text-text-sub-light dark:text-text-sub-dark">Executed at <span id="data-last">--</span></p>
+              </div>
+            </div>
+
+            <div class="mb-4 py-4 px-6 rounded-2xl shadow-neu-pressed-light dark:shadow-neu-pressed-dark bg-background-light dark:bg-background-dark text-center">
+              <p class="text-[10px] font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark mb-2">Last Action</p>
+              <p class="text-xl font-extrabold text-primary-glow" id="data-action">--</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="p-4 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
+                <div class="flex items-center space-x-2 mb-2">
+                  <span class="text-sm font-extrabold text-primary-glow" style="font-family: 'Nunito', sans-serif;">! !</span>
+                  <span class="text-xs font-bold">Risk</span>
+                </div>
+                <p class="text-[13px] text-text-sub-light dark:text-text-sub-dark leading-relaxed" id="data-risk">--</p>
+              </div>
+              <div class="p-4 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
+                <div class="flex items-center space-x-2 mb-2">
+                  <span class="material-icons-round text-sm text-primary-glow">bar_chart</span>
+                  <span class="text-xs font-bold">Market</span>
+                </div>
+                <p class="text-[13px] text-text-sub-light dark:text-text-sub-dark leading-relaxed" id="data-market">--</p>
+              </div>
+              <div class="p-4 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
+                <div class="flex items-center space-x-2 mb-2">
+                  <span class="material-icons-round text-sm text-primary-glow">bolt</span>
+                  <span class="text-xs font-bold">Execution</span>
+                </div>
+                <p class="text-[13px] text-text-sub-light dark:text-text-sub-dark leading-relaxed" id="data-summary">--</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- LOGIC PAGE -->
+      <section id="page-logic" class="page-section">
+        <!-- Header -->
+        <div class="mb-6 text-center">
+          <h1 class="text-2xl md:text-3xl font-bold mb-1">Market Logic</h1>
+          <p class="text-sm text-text-sub-light dark:text-text-sub-dark">AI-driven market analysis across timeframes</p>
+        </div>
+
+        <!-- Timeframe Selector -->
+        <div class="mb-6">
+          <div class="flex justify-center space-x-2">
+            <button class="logic-tf-btn px-4 py-2 rounded-xl text-sm font-bold shadow-neu-pressed-light dark:shadow-neu-pressed-dark text-primary-glow bg-background-light dark:bg-background-dark active" data-timeframe="daily">
+              <span class="material-icons-round text-base mr-1 align-middle">today</span>Daily
+            </button>
+            <button class="logic-tf-btn px-4 py-2 rounded-xl text-sm font-bold shadow-neu-flat-light dark:shadow-neu-flat-dark text-text-sub-light dark:text-text-sub-dark hover:text-primary-glow transition-colors bg-background-light dark:bg-background-dark" data-timeframe="weekly">
+              <span class="material-icons-round text-base mr-1 align-middle">date_range</span>Weekly
+            </button>
+            <button class="logic-tf-btn px-4 py-2 rounded-xl text-sm font-bold shadow-neu-flat-light dark:shadow-neu-flat-dark text-text-sub-light dark:text-text-sub-dark hover:text-primary-glow transition-colors bg-background-light dark:bg-background-dark" data-timeframe="monthly">
+              <span class="material-icons-round text-base mr-1 align-middle">calendar_month</span>Monthly
+            </button>
+          </div>
+        </div>
+
+        <!-- Timeframe Alignment -->
+        <div class="mb-6">
+          <div class="p-6 rounded-[2rem] shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
+            <div class="flex items-center space-x-3 mb-4">
+              <div class="w-10 h-10 rounded-full shadow-neu-pressed-light dark:shadow-neu-pressed-dark flex items-center justify-center text-primary-glow">
+                <span class="material-icons-round">compare_arrows</span>
+              </div>
+              <h3 class="text-base font-bold">Timeframe Alignment</h3>
+            </div>
+            <div class="grid grid-cols-3 gap-3">
+              <!-- Daily -->
+              <div class="p-3 rounded-xl text-center logic-tf-card shadow-neu-flat-light dark:shadow-neu-flat-dark" data-tf="daily">
+                <p class="text-xs font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark mb-2">Daily</p>
+                <span class="material-icons-round text-3xl mb-2" id="tf-daily-icon">--</span>
+                <p class="text-sm font-bold" id="tf-daily-dir">--</p>
+              </div>
+              <!-- Weekly -->
+              <div class="p-3 rounded-xl text-center logic-tf-card shadow-neu-flat-light dark:shadow-neu-flat-dark" data-tf="weekly">
+                <p class="text-xs font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark mb-2">Weekly</p>
+                <span class="material-icons-round text-3xl mb-2" id="tf-weekly-icon">--</span>
+                <p class="text-sm font-bold" id="tf-weekly-dir">--</p>
+              </div>
+              <!-- Monthly -->
+              <div class="p-3 rounded-xl text-center logic-tf-card shadow-neu-flat-light dark:shadow-neu-flat-dark" data-tf="monthly">
+                <p class="text-xs font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark mb-2">Monthly</p>
+                <span class="material-icons-round text-3xl mb-2" id="tf-monthly-icon">--</span>
+                <p class="text-sm font-bold" id="tf-monthly-dir">--</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Direction & Confidence Main Card -->
+        <div class="mb-6">
+          <div class="p-6 rounded-[2rem] shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full shadow-neu-pressed-light dark:shadow-neu-pressed-dark flex items-center justify-center">
+                  <span class="material-icons-round text-primary-glow" id="logic-direction-icon">trending_up</span>
+                </div>
+                <div>
+                  <p class="text-xs font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark">Direction</p>
+                  <p class="text-lg font-extrabold" id="logic-direction">--</p>
+                </div>
+              </div>
+              <div class="text-right">
+                <p class="text-xs font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark">Confidence</p>
+                <p class="text-lg font-extrabold text-primary-glow" id="logic-confidence">--%</p>
+              </div>
+            </div>
+            <!-- Confidence Bar -->
+            <div class="progress-track">
+              <div class="progress-fill" id="logic-confidence-bar" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Key Indicators Grid -->
+        <div class="mb-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Regime Bias (numeric: -1 to +1) -->
+            <div class="p-5 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center space-x-2">
+                  <span class="material-icons-round text-base text-primary-glow">psychology_alt</span>
+                  <span class="text-sm font-bold">Regime Bias</span>
+                </div>
+                <span class="text-base font-extrabold" id="logic-regime">--</span>
+              </div>
+              <div class="flex items-center space-x-2 mb-1">
+                <span class="text-xs text-text-sub-light dark:text-text-sub-dark">Bearish</span>
+                <div class="flex-1 h-2 rounded-full shadow-neu-pressed-light dark:shadow-neu-pressed-dark bg-background-light dark:bg-background-dark overflow-hidden">
+                  <div class="h-full flex">
+                    <div class="w-1/2 flex justify-end"><div class="h-full bg-red-500 transition-all duration-300" id="logic-regime-bar-neg" style="width: 0%"></div></div>
+                    <div class="w-1/2 flex justify-start"><div class="h-full bg-green-500 transition-all duration-300" id="logic-regime-bar-pos" style="width: 0%"></div></div>
+                  </div>
+                </div>
+                <span class="text-xs text-text-sub-light dark:text-text-sub-dark">Bullish</span>
+              </div>
+              <p class="text-xs text-center text-text-sub-light dark:text-text-sub-dark">-1 to +1</p>
+            </div>
+
+            <!-- News Momentum Score (numeric: -1 to +1) -->
+            <div class="p-5 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center space-x-2">
+                  <span class="material-icons-round text-base text-primary-glow">trending_up</span>
+                  <span class="text-sm font-bold">News Score</span>
+                </div>
+                <span class="text-base font-extrabold" id="logic-news">--</span>
+              </div>
+              <div class="flex items-center space-x-2 mb-1">
+                <span class="text-xs text-text-sub-light dark:text-text-sub-dark">Negative</span>
+                <div class="flex-1 h-2 rounded-full shadow-neu-pressed-light dark:shadow-neu-pressed-dark bg-background-light dark:bg-background-dark overflow-hidden">
+                  <div class="h-full flex">
+                    <div class="w-1/2 flex justify-end"><div class="h-full bg-red-500 transition-all duration-300" id="logic-news-bar-neg" style="width: 0%"></div></div>
+                    <div class="w-1/2 flex justify-start"><div class="h-full bg-green-500 transition-all duration-300" id="logic-news-bar-pos" style="width: 0%"></div></div>
+                  </div>
+                </div>
+                <span class="text-xs text-text-sub-light dark:text-text-sub-dark">Positive</span>
+              </div>
+              <p class="text-xs text-center text-text-sub-light dark:text-text-sub-dark">-1 to +1</p>
+            </div>
+
+            <!-- Signal Strength (categorical) -->
+            <div class="p-5 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                  <span class="material-icons-round text-base text-primary-glow">signal_cellular_alt</span>
+                  <span class="text-sm font-bold">Signal Strength</span>
+                </div>
+                <span class="text-base font-extrabold" id="logic-signal">--</span>
+              </div>
+            </div>
+
+            <!-- Alignment Quality (categorical) -->
+            <div class="p-5 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                  <span class="material-icons-round text-base text-primary-glow">tune</span>
+                  <span class="text-sm font-bold">Alignment Quality</span>
+                </div>
+                <span class="text-base font-extrabold" id="logic-alignment">--</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Thesis Section -->
+        <div class="mb-6">
+          <div class="p-6 rounded-[2rem] shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
+            <div class="flex items-center space-x-3 mb-4">
+              <div class="w-10 h-10 rounded-full shadow-neu-pressed-light dark:shadow-neu-pressed-dark flex items-center justify-center text-primary-glow">
+                <span class="material-icons-round">lightbulb</span>
+              </div>
+              <h3 class="text-base font-bold">Current Thesis</h3>
+            </div>
+            <p class="text-sm text-text-sub-light dark:text-text-sub-dark leading-relaxed" id="logic-thesis">Loading market thesis...</p>
+          </div>
+        </div>
+
+        <!-- Narratives & Events Row -->
+        <div class="mb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Dominant Narratives -->
+          <div class="p-5 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
+            <div class="flex items-center space-x-2 mb-3">
+              <span class="material-icons-round text-sm text-primary-glow">auto_stories</span>
+              <span class="text-xs font-bold">Dominant Narratives</span>
+            </div>
+            <ul class="space-y-2" id="logic-narratives">
+              <li class="text-sm text-text-sub-light dark:text-text-sub-dark">Loading...</li>
+            </ul>
+          </div>
+          <!-- Key Events -->
+          <div class="p-5 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
+            <div class="flex items-center space-x-2 mb-3">
+              <span class="material-icons-round text-sm text-primary-glow">event</span>
+              <span class="text-xs font-bold">Key Events</span>
+            </div>
+            <ul class="space-y-2" id="logic-events">
+              <li class="text-sm text-text-sub-light dark:text-text-sub-dark">Loading...</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- COT Analysis -->
+        <div class="mb-6">
+          <div class="p-5 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
+            <div class="flex items-center space-x-2 mb-3">
+              <span class="material-icons-round text-sm text-primary-glow">analytics</span>
+              <span class="text-sm font-bold">Chain of Thought Analysis</span>
+            </div>
+            <p class="text-sm text-text-sub-light dark:text-text-sub-dark leading-relaxed whitespace-pre-line" id="cot-summary">Loading COT analysis...</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- INFO PAGE -->
+      <section id="page-info" class="page-section">
+        <div class="p-6 rounded-[2rem] shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark text-center">
+          <span class="material-icons-round text-6xl text-primary-glow mb-4">info</span>
+          <h2 class="text-2xl font-bold mb-2">Info</h2>
+          <p class="text-text-sub-light dark:text-text-sub-dark">Coming soon...</p>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="fixed bottom-0 left-0 right-0 py-3 px-4 shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
+    <div class="max-w-4xl mx-auto text-center">
+      <p class="text-[10px] text-text-sub-light dark:text-text-sub-dark">&copy; 2026 Anomaly Trading Systems &middot; <a href="https://www.zerox.technology" target="_blank" class="text-primary-glow hover:underline transition-all">zerox.technology</a></p>
+    </div>
+  </footer>
+
+  <script>
+    // Page Navigation
+    function navigateTo(page) {
+      document.querySelectorAll('.page-section').forEach(function(section) {
+        section.classList.remove('active');
+      });
+      document.getElementById('page-' + page).classList.add('active');
+
+      // Update active state for navigation items
+      document.querySelectorAll('.nav-item').forEach(function(item) {
+        item.classList.remove('active');
+      });
+      document.querySelectorAll('.nav-item[data-page="' + page + '"]').forEach(function(item) {
+        item.classList.add('active');
+      });
+
+      document.getElementById('menuToggle').checked = false;
+      window.scrollTo(0, 0);
+    }
+
+    function toggleDarkMode() {
+      document.documentElement.classList.toggle('dark');
+      localStorage.setItem('darkMode', document.documentElement.classList.contains('dark'));
+      if (window.pnlChart) { window.pnlChart.destroy(); initChart(); }
+    }
+    if (localStorage.getItem('darkMode') === 'true') document.documentElement.classList.add('dark');
+
+    (function() {
+      if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+      window.scrollTo(0, 0);
+
+      var API_URL = 'https://305b3ad600d3.ngrok-free.app/webhook/wallet';
+      var CHART_API_URL = 'https://305b3ad600d3.ngrok-free.app/webhook/chart';
+      var loadingOverlay = document.getElementById('loadingOverlay');
+
+      function hideLoading() { loadingOverlay.classList.add('hidden'); }
+      function showError() {
+        document.getElementById('home-data-status').textContent = 'ERROR';
+        document.getElementById('home-data-status').style.color = '#64748B';
+        hideLoading();
+      }
+
+      function populateData(data) {
+        var d = Array.isArray(data) ? data[0] : data;
+        if (!d) { showError(); return; }
+        document.getElementById('data-value').textContent = d.value || '';
+        document.getElementById('data-side').textContent = d.side || '';
+        document.getElementById('home-header-uptime').textContent = d.uptime || '--';
+        document.getElementById('data-pnl').textContent = d.pnl || '';
+        document.getElementById('data-lev').textContent = d.lev || '';
+        document.getElementById('data-mrg').textContent = d.mrg || '';
+        document.getElementById('data-liq').textContent = d.liq || '';
+        document.getElementById('data-action').textContent = d.action || '';
+        document.getElementById('data-last').textContent = d.last || '';
+        document.getElementById('data-risk').textContent = d.risk || '';
+        document.getElementById('data-market').textContent = d.market || '';
+        document.getElementById('data-summary').textContent = d.summary || '';
+        document.getElementById('data-mrg-bar').style.width = (parseInt(d.mrg) || 0) + '%';
+        document.getElementById('data-liq-bar').style.width = (parseInt(d.liq) || 0) + '%';
+        document.getElementById('home-data-status').textContent = 'LIVE';
+        hideLoading();
+      }
+
+      fetch(API_URL, { headers: { 'ngrok-skip-browser-warning': 'true' } })
+        .then(r => r.ok ? r.json() : Promise.reject())
+        .then(populateData)
+        .catch(showError);
+
+      window.fetchChartData = function(tf) {
+        var url = tf && tf !== 'ALL' ? CHART_API_URL + '?timeframe=' + tf.toLowerCase() : CHART_API_URL;
+        fetch(url, { headers: { 'ngrok-skip-browser-warning': 'true' } })
+          .then(r => r.json())
+          .then(function(data) {
+            if (!window.pnlChart || !data.labels) return;
+            window.pnlChart.data.labels = data.labels.map(function(ts) {
+              var d = new Date(ts);
+              return (d.getMonth()+1) + '/' + d.getDate() + ' ' + d.getHours() + ':' + (d.getMinutes()<10?'0':'') + d.getMinutes();
+            });
+            window.pnlChart.data.datasets[0].data = data.values;
+            window.pnlChart.update();
+          });
+      };
+
+      window.initChart = function() {
+        var ctx = document.getElementById('pnlChart').getContext('2d');
+        var isDark = document.documentElement.classList.contains('dark');
+
+        var accentColor = '#FBAD60'; // RGB 251, 173, 96
+        var glowColor = 'rgba(251, 173, 96, 0.8)';
+        var textColor = isDark ? '#e0e0e0' : '#4a4a4a';
+        var subColor = isDark ? '#a0a0a0' : '#8d8d8d';
+        var gridColor = isDark ? 'rgba(160,160,160,0.1)' : 'rgba(141,141,141,0.15)';
+        var bgColor = isDark ? '#292929' : '#efeee9';
+
+        var gradient = ctx.createLinearGradient(0, 0, 0, 280);
+        gradient.addColorStop(0, 'rgba(251, 173, 96, 0.3)');
+        gradient.addColorStop(1, 'rgba(251, 173, 96, 0)');
+
+        var pulseTime = 0;
+        var glowPlugin = {
+          id: 'pointGlow',
+          afterDatasetsDraw: function(chart) {
+            var ctx = chart.ctx;
+            chart.data.datasets.forEach(function(dataset, i) {
+              var meta = chart.getDatasetMeta(i);
+              if (!meta.hidden && meta.data.length > 0) {
+                var lastIndex = meta.data.length - 1;
+
+                // Draw last point with pulse effect
+                if (meta.data[lastIndex]) {
+                  var element = meta.data[lastIndex];
+                  var pulse = Math.sin(Date.now() * 0.002) * 0.5 + 0.5;
+                  var scale = 1 + pulse * 0.4;
+
+                  ctx.save();
+                  ctx.shadowBlur = 12 + pulse * 8;
+                  ctx.shadowColor = glowColor;
+                  ctx.shadowOffsetX = 0;
+                  ctx.shadowOffsetY = 0;
+                  ctx.globalAlpha = 0.8 + pulse * 0.2;
+
+                  ctx.beginPath();
+                  ctx.arc(element.x, element.y, 5 * scale, 0, 2 * Math.PI);
+                  ctx.fillStyle = accentColor;
+                  ctx.fill();
+
+                  ctx.restore();
+                }
+              }
+            });
+          }
+        };
+
+        // Animate the last point continuously
+        setInterval(function() {
+          if (window.pnlChart && !window.pnlChart.destroyed) {
+            window.pnlChart.update('none');
+          }
+        }, 50);
+
+        window.pnlChart = new Chart(ctx, {
+          type: 'line',
+          data: { labels: [], datasets: [{
+            data: [],
+            borderColor: accentColor,
+            backgroundColor: gradient,
+            borderWidth: 3,
+            pointBackgroundColor: accentColor,
+            pointBorderColor: bgColor,
+            pointBorderWidth: 2,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+            pointHoverBackgroundColor: accentColor,
+            pointHoverBorderWidth: 3,
+            tension: 0.4,
+            fill: true,
+            shadowBlur: 12,
+            shadowColor: glowColor
+          }]},
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            layout: {
+              padding: {
+                right: 15,
+                top: 10
+              }
+            },
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: bgColor,
+                titleColor: textColor,
+                bodyColor: accentColor,
+                titleFont: { family: 'Nunito', size: 11, weight: '700' },
+                bodyFont: { family: 'Nunito', size: 13, weight: '800' },
+                padding: 10,
+                cornerRadius: 8,
+                borderColor: accentColor,
+                borderWidth: 2,
+                displayColors: false,
+                callbacks: { label: c => '$' + c.parsed.y.toLocaleString() }
+              }
+            },
+            scales: {
+              x: {
+                grid: { color: gridColor, drawBorder: false },
+                ticks: { color: subColor, font: { family: 'Nunito', size: 9, weight: '600' }, maxTicksLimit: 5 }
+              },
+              y: {
+                grid: { color: gridColor, drawBorder: false },
+                ticks: {
+                  color: subColor,
+                  font: { family: 'Nunito', size: 9, weight: '600' },
+                  callback: v => v >= 1000 ? '$' + (v/1000).toFixed(1) + 'K' : '$' + v
+                }
+              }
+            },
+            interaction: { mode: 'index', intersect: false }
+          },
+          plugins: [glowPlugin]
+        });
+        fetchChartData('ALL');
+      };
+
+      document.querySelectorAll('.timeframe-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('.timeframe-btn').forEach(function(b) {
+            b.classList.remove('shadow-neu-pressed-light', 'dark:shadow-neu-pressed-dark', 'text-primary-glow');
+            b.classList.add('shadow-neu-flat-light', 'dark:shadow-neu-flat-dark', 'text-text-sub-light', 'dark:text-text-sub-dark');
+          });
+          this.classList.add('shadow-neu-pressed-light', 'dark:shadow-neu-pressed-dark', 'text-primary-glow');
+          this.classList.remove('shadow-neu-flat-light', 'dark:shadow-neu-flat-dark', 'text-text-sub-light', 'dark:text-text-sub-dark');
+          fetchChartData(this.dataset.timeframe);
+        });
+      });
+
+      window.addEventListener('DOMContentLoaded', initChart);
+    })();
+
+    // Text Scramble Effect for "Anomaly"
+    (function() {
+      var targetWord = 'Anomaly';
+      var scrambleContainer = document.getElementById('scramble-word');
+      var isAnimating = false;
+
+      // Character set per lo scramble
+      var characterSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
+
+      // Configurazione animazione
+      var duration = 3.0; // secondi - molto più lento
+      var speed = 0.08; // secondi per frame - rallentato
+
+      function getRandomChar() {
+        return characterSet[Math.floor(Math.random() * characterSet.length)];
+      }
+
+      function scramble() {
+        if (isAnimating) return;
+        isAnimating = true;
+
+        // Crea uno span per ogni carattere
+        scrambleContainer.innerHTML = '';
+        var charSpans = [];
+        var charRevealed = [];
+        var charGlowApplied = [];
+
+        for (var i = 0; i < targetWord.length; i++) {
+          var span = document.createElement('span');
+          span.textContent = targetWord[i];
+          scrambleContainer.appendChild(span);
+          charSpans.push(span);
+          charRevealed.push(false);
+          charGlowApplied.push(false);
+        }
+
+        var steps = duration / speed;
+        var step = 0;
+
+        var interval = setInterval(function() {
+          var progress = step / steps;
+
+          for (var i = 0; i < targetWord.length; i++) {
+            if (targetWord[i] === ' ') {
+              continue;
+            }
+
+            if (progress * targetWord.length > i) {
+              // Lettera in fase di reveal
+
+              // Applica glow arancione quando la lettera INIZIA lo scramble
+              if (!charGlowApplied[i]) {
+                (function(span) {
+                  // Applica colore arancione con GLOW INTENSO immediatamente
+                  span.style.transition = 'none';
+                  span.style.color = '#FBAD60';
+                  span.style.textShadow = '0 0 12px rgba(251, 173, 96, 1), 0 0 20px rgba(251, 173, 96, 0.8)';
+
+                  // Dopo 100ms, riduce il glow a normale
+                  setTimeout(function() {
+                    span.style.transition = 'text-shadow 0.3s ease-out';
+                    span.style.textShadow = '0 0 4px rgba(251, 173, 96, 0.5)';
+                  }, 100);
+                })(charSpans[i]);
+                charGlowApplied[i] = true;
+              }
+
+              // Rivela la lettera finale
+              if (!charRevealed[i]) {
+                charSpans[i].textContent = targetWord[i];
+                charRevealed[i] = true;
+
+                // Inizia transizione verso il bianco
+                (function(span) {
+                  setTimeout(function() {
+                    span.style.transition = 'color 10s ease-out, text-shadow 10s ease-out';
+                    span.style.color = '';
+                    span.style.textShadow = '';
+                  }, 150);
+                })(charSpans[i]);
+              }
+            } else {
+              // Lettera ancora scrambled
+              charSpans[i].textContent = getRandomChar();
+            }
+          }
+
+          step++;
+
+          if (step > steps) {
+            clearInterval(interval);
+            isAnimating = false;
+          }
+        }, speed * 1000);
+      }
+
+      window.addEventListener('DOMContentLoaded', function() {
+        // Inizializza con gli span
+        scrambleContainer.innerHTML = '';
+        for (var i = 0; i < targetWord.length; i++) {
+          var span = document.createElement('span');
+          span.textContent = targetWord[i];
+          scrambleContainer.appendChild(span);
+        }
+
+        // Avvia la prima animazione dopo un piccolo delay
+        setTimeout(function() {
+          scramble();
+        }, 500);
+
+        // Ripeti l'animazione ogni 15 secondi
+        setInterval(function() {
+          scramble();
+        }, 15000);
+      });
+    })();
+
+    // Logic Page Functionality
+    (function() {
+      var LOGIC_API_URL = 'https://305b3ad600d3.ngrok-free.app/webhook/logic';
+      var logicData = null;
+      var currentTimeframe = 'daily';
+
+      // Get direction icon based on direction string
+      function getDirectionIcon(direction) {
+        if (!direction) return 'remove';
+        var dir = direction.toLowerCase();
+        if (dir === 'long' || dir.includes('bullish') || dir.includes('up')) return 'trending_up';
+        if (dir === 'short' || dir.includes('bearish') || dir.includes('down')) return 'trending_down';
+        if (dir === 'neutral' || dir.includes('flat') || dir.includes('sideways')) return 'trending_flat';
+        return 'trending_flat';
+      }
+
+      // Get color class based on direction
+      function getDirectionColor(direction) {
+        if (!direction) return 'text-text-sub-light dark:text-text-sub-dark';
+        var dir = direction.toLowerCase();
+        if (dir === 'long' || dir.includes('bullish') || dir.includes('up')) return 'text-green-500';
+        if (dir === 'short' || dir.includes('bearish') || dir.includes('down')) return 'text-red-500';
+        return 'text-text-sub-light dark:text-text-sub-dark';
+      }
+
+      // Update the main display for selected timeframe
+      function updateLogicDisplay(tfData) {
+        if (!tfData) return;
+
+        // Direction
+        var directionEl = document.getElementById('logic-direction');
+        var directionIconEl = document.getElementById('logic-direction-icon');
+        directionEl.textContent = tfData.direction || '--';
+        directionIconEl.textContent = getDirectionIcon(tfData.direction);
+        directionEl.className = 'text-xl font-extrabold ' + getDirectionColor(tfData.direction);
+
+        // Confidence (can be string like "low", "high", "moderate" or a number)
+        var confidence = tfData.confidence || '--';
+        var confidenceNum = 0;
+        if (typeof confidence === 'number') {
+          confidenceNum = confidence;
+          document.getElementById('logic-confidence').textContent = confidence + '%';
+        } else if (typeof confidence === 'string') {
+          // Map string values to percentages for the bar
+          var confMap = { 'low': 25, 'moderate': 50, 'medium': 50, 'high': 75, 'very high': 90 };
+          confidenceNum = confMap[confidence.toLowerCase()] || 50;
+          document.getElementById('logic-confidence').textContent = confidence.charAt(0).toUpperCase() + confidence.slice(1);
+        }
+        document.getElementById('logic-confidence-bar').style.width = confidenceNum + '%';
+
+        // Indicators
+        // Regime Bias (-1 to +1)
+        var regimeBias = tfData.regimebias != null ? tfData.regimebias : 0;
+        document.getElementById('logic-regime').textContent = regimeBias;
+        var regimePercent = Math.abs(regimeBias) * 100;
+        if (regimeBias < 0) {
+          document.getElementById('logic-regime-bar-neg').style.width = regimePercent + '%';
+          document.getElementById('logic-regime-bar-pos').style.width = '0%';
+        } else if (regimeBias > 0) {
+          document.getElementById('logic-regime-bar-pos').style.width = regimePercent + '%';
+          document.getElementById('logic-regime-bar-neg').style.width = '0%';
+        } else {
+          document.getElementById('logic-regime-bar-neg').style.width = '0%';
+          document.getElementById('logic-regime-bar-pos').style.width = '0%';
+        }
+
+        // News Momentum Score (-1 to +1)
+        var newsScore = tfData.newsmomentumscore != null ? tfData.newsmomentumscore : 0;
+        document.getElementById('logic-news').textContent = newsScore;
+        var newsPercent = Math.abs(newsScore) * 100;
+        if (newsScore < 0) {
+          document.getElementById('logic-news-bar-neg').style.width = newsPercent + '%';
+          document.getElementById('logic-news-bar-pos').style.width = '0%';
+        } else if (newsScore > 0) {
+          document.getElementById('logic-news-bar-pos').style.width = newsPercent + '%';
+          document.getElementById('logic-news-bar-neg').style.width = '0%';
+        } else {
+          document.getElementById('logic-news-bar-neg').style.width = '0%';
+          document.getElementById('logic-news-bar-pos').style.width = '0%';
+        }
+
+        // Signal Strength & Alignment (categorical)
+        document.getElementById('logic-signal').textContent = tfData.signalstrength || '--';
+        document.getElementById('logic-alignment').textContent = tfData.alignmentquality || '--';
+
+        // Thesis
+        document.getElementById('logic-thesis').textContent = tfData.thesis || 'No thesis available';
+
+        // Narratives - handle as comma-separated string
+        var narrativesEl = document.getElementById('logic-narratives');
+        if (tfData.dominantnarratives) {
+          var narrativesArray = Array.isArray(tfData.dominantnarratives)
+            ? tfData.dominantnarratives
+            : tfData.dominantnarratives.split(',').map(function(s) { return s.trim(); });
+
+          if (narrativesArray.length > 0) {
+            narrativesEl.innerHTML = narrativesArray.map(function(n) {
+              return '<li class="text-sm text-text-sub-light dark:text-text-sub-dark flex items-start"><span class="material-icons-round text-xs text-primary-glow mr-2 mt-0.5">chevron_right</span>' + n + '</li>';
+            }).join('');
+          } else {
+            narrativesEl.innerHTML = '<li class="text-sm text-text-sub-light dark:text-text-sub-dark">No narratives available</li>';
+          }
+        } else {
+          narrativesEl.innerHTML = '<li class="text-sm text-text-sub-light dark:text-text-sub-dark">No narratives available</li>';
+        }
+
+        // Events - handle as pipe-separated string
+        var eventsEl = document.getElementById('logic-events');
+        if (tfData.keyevents) {
+          var eventsArray = Array.isArray(tfData.keyevents)
+            ? tfData.keyevents
+            : tfData.keyevents.split('|').map(function(s) { return s.trim(); });
+
+          if (eventsArray.length > 0) {
+            eventsEl.innerHTML = eventsArray.map(function(e) {
+              return '<li class="text-sm text-text-sub-light dark:text-text-sub-dark flex items-start"><span class="material-icons-round text-xs text-primary-glow mr-2 mt-0.5">schedule</span>' + e + '</li>';
+            }).join('');
+          } else {
+            eventsEl.innerHTML = '<li class="text-sm text-text-sub-light dark:text-text-sub-dark">No events available</li>';
+          }
+        } else {
+          eventsEl.innerHTML = '<li class="text-sm text-text-sub-light dark:text-text-sub-dark">No events available</li>';
+        }
+
+        // COT - handle as plain text string
+        if (tfData.cot) {
+          document.getElementById('cot-summary').textContent = tfData.cot;
+        } else {
+          document.getElementById('cot-summary').textContent = 'No COT analysis available';
+        }
+      }
+
+      // Update timeframe comparison cards
+      function updateTimeframeCards(data) {
+        var timeframes = ['daily', 'weekly', 'monthly'];
+        timeframes.forEach(function(tf) {
+          var tfData = data[tf];
+          var iconEl = document.getElementById('tf-' + tf + '-icon');
+          var dirEl = document.getElementById('tf-' + tf + '-dir');
+          var cardEl = document.querySelector('.logic-tf-card[data-tf="' + tf + '"]');
+
+          if (tfData) {
+            iconEl.textContent = getDirectionIcon(tfData.direction);
+            iconEl.className = 'material-icons-round text-2xl ' + getDirectionColor(tfData.direction);
+            dirEl.textContent = tfData.direction || '--';
+            dirEl.className = 'text-xs font-bold mt-1 ' + getDirectionColor(tfData.direction);
+          }
+
+          // Highlight current selection
+          if (tf === currentTimeframe) {
+            cardEl.classList.add('shadow-neu-pressed-light', 'dark:shadow-neu-pressed-dark');
+            cardEl.classList.remove('shadow-neu-flat-light', 'dark:shadow-neu-flat-dark');
+          } else {
+            cardEl.classList.remove('shadow-neu-pressed-light', 'dark:shadow-neu-pressed-dark');
+            cardEl.classList.add('shadow-neu-flat-light', 'dark:shadow-neu-flat-dark');
+          }
+        });
+      }
+
+      // Fetch logic data from API
+      function fetchLogicData() {
+        fetch(LOGIC_API_URL, { headers: { 'ngrok-skip-browser-warning': 'true' } })
+          .then(function(r) { return r.json(); })
+          .then(function(data) {
+            // Transform array to object keyed by timeframe
+            if (Array.isArray(data)) {
+              logicData = {};
+              data.forEach(function(item) {
+                if (item.timeframe) {
+                  logicData[item.timeframe] = item;
+                }
+              });
+            } else {
+              logicData = data;
+            }
+
+            if (logicData[currentTimeframe]) {
+              updateLogicDisplay(logicData[currentTimeframe]);
+            }
+            updateTimeframeCards(logicData);
+          })
+          .catch(function(err) {
+            console.error('Error fetching logic data:', err);
+            document.getElementById('logic-thesis').textContent = 'Unable to load market logic data';
+          });
+      }
+
+      // Timeframe button handlers
+      document.querySelectorAll('.logic-tf-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          // Update button states
+          document.querySelectorAll('.logic-tf-btn').forEach(function(b) {
+            b.classList.remove('shadow-neu-pressed-light', 'dark:shadow-neu-pressed-dark', 'text-primary-glow');
+            b.classList.add('shadow-neu-flat-light', 'dark:shadow-neu-flat-dark', 'text-text-sub-light', 'dark:text-text-sub-dark');
+          });
+          this.classList.add('shadow-neu-pressed-light', 'dark:shadow-neu-pressed-dark', 'text-primary-glow');
+          this.classList.remove('shadow-neu-flat-light', 'dark:shadow-neu-flat-dark', 'text-text-sub-light', 'dark:text-text-sub-dark');
+
+          // Update current timeframe and display
+          currentTimeframe = this.dataset.timeframe;
+          if (logicData && logicData[currentTimeframe]) {
+            updateLogicDisplay(logicData[currentTimeframe]);
+          }
+          updateTimeframeCards(logicData || {});
+        });
+      });
+
+      // Timeframe card click handlers
+      document.querySelectorAll('.logic-tf-card').forEach(function(card) {
+        card.addEventListener('click', function() {
+          var tf = this.dataset.tf;
+          currentTimeframe = tf;
+
+          // Update button states
+          document.querySelectorAll('.logic-tf-btn').forEach(function(b) {
+            if (b.dataset.timeframe === tf) {
+              b.classList.add('shadow-neu-pressed-light', 'dark:shadow-neu-pressed-dark', 'text-primary-glow');
+              b.classList.remove('shadow-neu-flat-light', 'dark:shadow-neu-flat-dark', 'text-text-sub-light', 'dark:text-text-sub-dark');
+            } else {
+              b.classList.remove('shadow-neu-pressed-light', 'dark:shadow-neu-pressed-dark', 'text-primary-glow');
+              b.classList.add('shadow-neu-flat-light', 'dark:shadow-neu-flat-dark', 'text-text-sub-light', 'dark:text-text-sub-dark');
+            }
+          });
+
+          if (logicData && logicData[currentTimeframe]) {
+            updateLogicDisplay(logicData[currentTimeframe]);
+          }
+          updateTimeframeCards(logicData || {});
+        });
+      });
+
+      // Fetch data on page load
+      window.addEventListener('DOMContentLoaded', function() {
+        fetchLogicData();
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -196,6 +196,8 @@
     }
     #scramble-word {
       display: inline-block;
+      min-width: 7.5ch;
+      text-align: center;
     }
     #scramble-word span {
       display: inline-block;
@@ -552,44 +554,44 @@
               <!-- Daily -->
               <div class="p-3 rounded-xl text-center logic-tf-card shadow-neu-flat-light dark:shadow-neu-flat-dark" data-tf="daily">
                 <p class="text-sm font-bold tracking-wide text-text-sub-light dark:text-text-sub-dark mb-2" id="tf-daily-label">Daily</p>
-                <span class="material-icons-round text-3xl mb-2 text-text-sub-light dark:text-text-sub-dark hidden" id="tf-daily-icon">--</span>
-                <p class="text-sm font-bold text-text-sub-light dark:text-text-sub-dark mb-2 hidden" id="tf-daily-dir">--</p>
-                <div class="flex justify-center gap-1 mb-1 hidden" id="tf-daily-confidence">
+                <span class="material-icons-round text-3xl mb-2 text-text-sub-light dark:text-text-sub-dark" id="tf-daily-icon">--</span>
+                <p class="text-sm font-bold text-text-sub-light dark:text-text-sub-dark mb-2" id="tf-daily-dir">--</p>
+                <div class="flex justify-center gap-1 mb-1" id="tf-daily-confidence">
                   <div class="indicator-dot small"></div>
                   <div class="indicator-dot small"></div>
                   <div class="indicator-dot small"></div>
                   <div class="indicator-dot small"></div>
                   <div class="indicator-dot small"></div>
                 </div>
-                <p class="text-[10px] font-semibold text-text-sub-light dark:text-text-sub-dark hidden" id="tf-daily-conf-text">--</p>
+                <p class="text-[10px] font-semibold text-text-sub-light dark:text-text-sub-dark" id="tf-daily-conf-text">--</p>
               </div>
               <!-- Weekly -->
               <div class="p-3 rounded-xl text-center logic-tf-card shadow-neu-flat-light dark:shadow-neu-flat-dark" data-tf="weekly">
                 <p class="text-sm font-bold tracking-wide text-text-sub-light dark:text-text-sub-dark mb-2" id="tf-weekly-label">Weekly</p>
-                <span class="material-icons-round text-3xl mb-2 text-text-sub-light dark:text-text-sub-dark hidden" id="tf-weekly-icon">--</span>
-                <p class="text-sm font-bold text-text-sub-light dark:text-text-sub-dark mb-2 hidden" id="tf-weekly-dir">--</p>
-                <div class="flex justify-center gap-1 mb-1 hidden" id="tf-weekly-confidence">
+                <span class="material-icons-round text-3xl mb-2 text-text-sub-light dark:text-text-sub-dark" id="tf-weekly-icon">--</span>
+                <p class="text-sm font-bold text-text-sub-light dark:text-text-sub-dark mb-2" id="tf-weekly-dir">--</p>
+                <div class="flex justify-center gap-1 mb-1" id="tf-weekly-confidence">
                   <div class="indicator-dot small"></div>
                   <div class="indicator-dot small"></div>
                   <div class="indicator-dot small"></div>
                   <div class="indicator-dot small"></div>
                   <div class="indicator-dot small"></div>
                 </div>
-                <p class="text-[10px] font-semibold text-text-sub-light dark:text-text-sub-dark hidden" id="tf-weekly-conf-text">--</p>
+                <p class="text-[10px] font-semibold text-text-sub-light dark:text-text-sub-dark" id="tf-weekly-conf-text">--</p>
               </div>
               <!-- Monthly -->
               <div class="p-3 rounded-xl text-center logic-tf-card shadow-neu-flat-light dark:shadow-neu-flat-dark" data-tf="monthly">
                 <p class="text-sm font-bold tracking-wide text-text-sub-light dark:text-text-sub-dark mb-2" id="tf-monthly-label">Monthly</p>
-                <span class="material-icons-round text-3xl mb-2 text-text-sub-light dark:text-text-sub-dark hidden" id="tf-monthly-icon">--</span>
-                <p class="text-sm font-bold text-text-sub-light dark:text-text-sub-dark mb-2 hidden" id="tf-monthly-dir">--</p>
-                <div class="flex justify-center gap-1 mb-1 hidden" id="tf-monthly-confidence">
+                <span class="material-icons-round text-3xl mb-2 text-text-sub-light dark:text-text-sub-dark" id="tf-monthly-icon">--</span>
+                <p class="text-sm font-bold text-text-sub-light dark:text-text-sub-dark mb-2" id="tf-monthly-dir">--</p>
+                <div class="flex justify-center gap-1 mb-1" id="tf-monthly-confidence">
                   <div class="indicator-dot small"></div>
                   <div class="indicator-dot small"></div>
                   <div class="indicator-dot small"></div>
                   <div class="indicator-dot small"></div>
                   <div class="indicator-dot small"></div>
                 </div>
-                <p class="text-[10px] font-semibold text-text-sub-light dark:text-text-sub-dark hidden" id="tf-monthly-conf-text">--</p>
+                <p class="text-[10px] font-semibold text-text-sub-light dark:text-text-sub-dark" id="tf-monthly-conf-text">--</p>
               </div>
             </div>
           </div>
@@ -1162,7 +1164,7 @@
         // Thesis
         document.getElementById('logic-thesis').textContent = tfData.thesis || 'No thesis available';
 
-        // Narratives - handle as comma-separated string (horizontal with separators)
+        // Narratives - handle as comma-separated string (horizontal with dash separators)
         var narrativesEl = document.getElementById('logic-narratives');
         if (tfData.dominantnarratives) {
           var narrativesArray = Array.isArray(tfData.dominantnarratives)
@@ -1171,7 +1173,7 @@
 
           if (narrativesArray.length > 0) {
             narrativesEl.innerHTML = narrativesArray.map(function(n, idx) {
-              var separator = idx < narrativesArray.length - 1 ? '<span class="text-primary-glow mx-2">•</span>' : '';
+              var separator = idx < narrativesArray.length - 1 ? '<span class="text-primary-glow mx-2">-</span>' : '';
               return '<span class="text-xs text-text-sub-light dark:text-text-sub-dark inline">' + n + '</span>' + separator;
             }).join('');
           } else {
@@ -1220,6 +1222,7 @@
           var confTextEl = document.getElementById('tf-' + tf + '-conf-text');
 
           if (tfData) {
+            // Always show data
             iconEl.textContent = getDirectionIcon(tfData.direction);
             dirEl.textContent = tfData.direction || '--';
 
@@ -1238,40 +1241,38 @@
             var dotsToActivate = Math.ceil((confidenceNum / 100) * 5);
             var dots = confidenceEl.querySelectorAll('.indicator-dot');
 
-            // Show/hide elements based on selection
+            // Update dots (always visible, but only active if selected)
+            dots.forEach(function(dot, idx) {
+              if (tf === currentTimeframe && idx < dotsToActivate) {
+                dot.classList.add('active');
+              } else {
+                dot.classList.remove('active');
+              }
+            });
+
+            // Color based on selection
             if (tf === currentTimeframe) {
-              // Selected: show all data
+              // Selected: everything orange
               cardEl.classList.add('shadow-neu-pressed-light', 'dark:shadow-neu-pressed-dark');
               cardEl.classList.remove('shadow-neu-flat-light', 'dark:shadow-neu-flat-dark');
 
               labelEl.className = 'text-sm font-bold tracking-wide text-primary-glow mb-2';
-              iconEl.classList.remove('hidden');
               iconEl.className = 'material-icons-round text-3xl mb-2 text-primary-glow';
-              dirEl.classList.remove('hidden');
               dirEl.className = 'text-sm font-bold text-primary-glow mb-2';
-              confidenceEl.classList.remove('hidden');
-              confTextEl.classList.remove('hidden');
-
-              dots.forEach(function(dot, idx) {
-                if (idx < dotsToActivate) {
-                  dot.classList.add('active');
-                } else {
-                  dot.classList.remove('active');
-                }
-              });
 
               // Format confidence text with label
               confTextEl.innerHTML = '<span class="text-text-sub-light dark:text-text-sub-dark">confidence: </span><span class="text-primary-glow">' + confidenceText + '</span>';
             } else {
-              // Not selected: show only timeframe name
+              // Not selected: everything gray
               cardEl.classList.remove('shadow-neu-pressed-light', 'dark:shadow-neu-pressed-dark');
               cardEl.classList.add('shadow-neu-flat-light', 'dark:shadow-neu-flat-dark');
 
               labelEl.className = 'text-sm font-bold tracking-wide text-text-sub-light dark:text-text-sub-dark mb-2';
-              iconEl.classList.add('hidden');
-              dirEl.classList.add('hidden');
-              confidenceEl.classList.add('hidden');
-              confTextEl.classList.add('hidden');
+              iconEl.className = 'material-icons-round text-3xl mb-2 text-text-sub-light dark:text-text-sub-dark';
+              dirEl.className = 'text-sm font-bold text-text-sub-light dark:text-text-sub-dark mb-2';
+
+              // Format confidence text with label (all gray)
+              confTextEl.innerHTML = '<span class="text-text-sub-light dark:text-text-sub-dark">confidence: ' + confidenceText + '</span>';
             }
           }
         });

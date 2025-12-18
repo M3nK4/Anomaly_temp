@@ -432,14 +432,15 @@
             </div>
 
             <!-- Latest Trade Section -->
-            <div class="mt-6 pt-6 border-t border-text-sub-light dark:border-text-sub-dark border-opacity-20">
+            <div class="mt-6 pt-6 relative">
+              <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-text-sub-light dark:via-text-sub-dark to-transparent opacity-30"></div>
               <div class="flex items-center space-x-3 mb-3">
                 <div class="w-10 h-10 rounded-full shadow-neu-pressed-light dark:shadow-neu-pressed-dark flex items-center justify-center text-primary-glow">
                   <span class="material-icons-round">swap_horiz</span>
                 </div>
                 <div>
                   <h3 class="text-base font-bold">Latest Trade</h3>
-                  <p class="text-xs text-text-sub-light dark:text-text-sub-dark">Executed at <span id="home-latest-trade-date">--</span></p>
+                  <p class="text-xs text-text-sub-light dark:text-text-sub-dark">Executed at <span class="text-primary-glow" id="home-latest-trade-date">--</span></p>
                 </div>
               </div>
               <p class="text-sm text-text-sub-light dark:text-text-sub-dark leading-relaxed" id="home-latest-trade">Loading...</p>
@@ -451,7 +452,7 @@
         <div class="p-6 rounded-[2rem] shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
           <div class="flex items-center space-x-3 mb-4">
             <div class="w-10 h-10 rounded-full shadow-neu-pressed-light dark:shadow-neu-pressed-dark flex items-center justify-center text-primary-glow">
-              <span class="material-icons-round">article</span>
+              <span class="material-icons-round">auto_awesome</span>
             </div>
             <h3 class="text-lg font-bold">The Concept</h3>
           </div>
@@ -697,10 +698,10 @@
                 <span class="text-xs font-semibold text-primary-glow" id="logic-signal-text">--</span>
               </div>
               <div class="flex justify-center items-center gap-4 md:gap-6" id="logic-signal-icons">
-                <span class="material-icons-round" data-level="weak" title="Weak">looks_one</span>
-                <span class="material-icons-round" data-level="moderate" title="Moderate">looks_two</span>
-                <span class="material-icons-round" data-level="strong" title="Strong">looks_3</span>
-                <span class="material-icons-round" data-level="very_strong" title="Very Strong">looks_4</span>
+                <span class="material-icons-round" data-level="weak" title="Weak">insert_chart_outlined</span>
+                <span class="material-icons-round" data-level="moderate" title="Moderate">insert_chart</span>
+                <span class="material-icons-round" data-level="strong" title="Strong">bar_chart</span>
+                <span class="material-icons-round" data-level="very_strong" title="Very Strong">assessment</span>
               </div>
             </div>
 
@@ -750,7 +751,7 @@
         <div class="mb-6">
           <div class="p-5 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
             <div class="flex items-center space-x-2 mb-3">
-              <span class="material-icons-round text-sm text-primary-glow">smart_toy</span>
+              <span class="material-icons-round text-sm text-primary-glow">psychology</span>
               <span class="text-sm font-bold">Neural Framework</span>
             </div>
             <p class="text-sm text-text-sub-light dark:text-text-sub-dark leading-relaxed whitespace-pre-line" id="cot-summary">Loading neural analysis...</p>

@@ -293,15 +293,18 @@
 
     /* Alignment Quality - larger icons */
     #logic-alignment-icons .material-icons-round {
-      font-size: 36px;
+      font-size: 42px;
       color: #d1cfc4;
+      transition: all 0.3s ease;
+      cursor: pointer;
     }
     .dark #logic-alignment-icons .material-icons-round {
       color: #373737;
     }
     #logic-alignment-icons .material-icons-round.active {
       color: #FBAD60;
-      text-shadow: 0 0 10px rgba(251, 173, 96, 0.9);
+      text-shadow: 0 0 12px rgba(251, 173, 96, 0.9);
+      transform: scale(1.1);
     }
   </style>
 </head>
@@ -674,18 +677,17 @@
             </div>
 
             <!-- Alignment Quality (aligned/conflicting/unclear) -->
-            <div class="p-5 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
-              <div class="flex items-center justify-between mb-4">
-                <div class="flex items-center space-x-2">
-                  <span class="material-icons-round text-base text-primary-glow">tune</span>
-                  <span class="text-sm font-bold">Alignment Quality</span>
-                </div>
-                <span class="text-xs font-bold text-text-sub-light dark:text-text-sub-dark" id="logic-alignment-text">--</span>
+            <div class="p-6 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark flex flex-col items-center justify-center">
+              <div class="text-center mb-3">
+                <span class="text-sm font-bold text-text-main-light dark:text-text-main-dark">Alignment Quality</span>
               </div>
-              <div class="flex justify-center items-center gap-6" id="logic-alignment-icons">
-                <span class="material-icons-round text-4xl" data-state="aligned" title="Aligned">verified</span>
-                <span class="material-icons-round text-4xl" data-state="conflicting" title="Conflicting">warning</span>
-                <span class="material-icons-round text-4xl" data-state="unclear" title="Unclear">help</span>
+              <div class="flex justify-center items-center gap-8 mb-3" id="logic-alignment-icons">
+                <span class="material-icons-round" data-state="aligned" title="Aligned">verified</span>
+                <span class="material-icons-round" data-state="conflicting" title="Conflicting">warning</span>
+                <span class="material-icons-round" data-state="unclear" title="Unclear">help</span>
+              </div>
+              <div class="text-center">
+                <span class="text-xs font-semibold text-primary-glow" id="logic-alignment-text">--</span>
               </div>
             </div>
           </div>

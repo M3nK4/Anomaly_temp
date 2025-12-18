@@ -337,16 +337,16 @@
     <div class="max-w-4xl mx-auto flex items-center justify-end">
       <!-- Desktop Navigation (right side, hidden on mobile, icon only) -->
       <nav class="hidden lg:flex items-center space-x-2">
-        <span onclick="navigateTo('home')" data-page="home" class="nav-item active w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow">
+        <span onclick="navigateTo('home')" data-page="home" class="nav-item active w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer shadow-neu-icon-light dark:shadow-neu-icon-dark hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow bg-background-light dark:bg-background-dark">
           <span class="material-icons-round text-base">home</span>
         </span>
-        <span onclick="navigateTo('wallet')" data-page="wallet" class="nav-item w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow">
+        <span onclick="navigateTo('wallet')" data-page="wallet" class="nav-item w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer shadow-neu-icon-light dark:shadow-neu-icon-dark hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow bg-background-light dark:bg-background-dark">
           <span class="material-icons-round text-text-sub-light dark:text-text-sub-dark text-base">account_balance_wallet</span>
         </span>
-        <span onclick="navigateTo('logic')" data-page="logic" class="nav-item w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow">
+        <span onclick="navigateTo('logic')" data-page="logic" class="nav-item w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer shadow-neu-icon-light dark:shadow-neu-icon-dark hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow bg-background-light dark:bg-background-dark">
           <span class="material-icons-round text-text-sub-light dark:text-text-sub-dark text-base">psychology</span>
         </span>
-        <span onclick="navigateTo('info')" data-page="info" class="nav-item w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow">
+        <span onclick="navigateTo('info')" data-page="info" class="nav-item w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer shadow-neu-icon-light dark:shadow-neu-icon-dark hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow bg-background-light dark:bg-background-dark">
           <span class="material-icons-round text-text-sub-light dark:text-text-sub-dark text-base">info</span>
         </span>
       </nav>
@@ -370,16 +370,16 @@
 
   <nav class="menu-panel fixed top-16 right-4 w-auto z-50 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark" id="menu">
     <div class="p-2 flex flex-col space-y-2">
-      <span onclick="navigateTo('home')" data-page="home" class="nav-item active w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow">
+      <span onclick="navigateTo('home')" data-page="home" class="nav-item active w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer shadow-neu-icon-light dark:shadow-neu-icon-dark hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow bg-background-light dark:bg-background-dark">
         <span class="material-icons-round text-base">home</span>
       </span>
-      <span onclick="navigateTo('wallet')" data-page="wallet" class="nav-item w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow">
+      <span onclick="navigateTo('wallet')" data-page="wallet" class="nav-item w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer shadow-neu-icon-light dark:shadow-neu-icon-dark hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow bg-background-light dark:bg-background-dark">
         <span class="material-icons-round text-text-sub-light dark:text-text-sub-dark text-base">account_balance_wallet</span>
       </span>
-      <span onclick="navigateTo('logic')" data-page="logic" class="nav-item w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow">
+      <span onclick="navigateTo('logic')" data-page="logic" class="nav-item w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer shadow-neu-icon-light dark:shadow-neu-icon-dark hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow bg-background-light dark:bg-background-dark">
         <span class="material-icons-round text-text-sub-light dark:text-text-sub-dark text-base">psychology</span>
       </span>
-      <span onclick="navigateTo('info')" data-page="info" class="nav-item w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow">
+      <span onclick="navigateTo('info')" data-page="info" class="nav-item w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer shadow-neu-icon-light dark:shadow-neu-icon-dark hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow bg-background-light dark:bg-background-dark">
         <span class="material-icons-round text-text-sub-light dark:text-text-sub-dark text-base">info</span>
       </span>
     </div>
@@ -650,8 +650,8 @@
               <div class="flex items-center space-x-2 mb-3">
                 <span class="material-icons-round text-base text-primary-glow">balance</span>
                 <span class="text-sm font-bold">Regime Bias</span>
-                <div class="w-6 h-6 rounded-full border-2 border-text-main-light dark:border-text-main-dark flex items-center justify-center">
-                  <span class="text-xs font-bold text-text-main-light dark:text-text-main-dark" id="logic-regime-value">--</span>
+                <div class="w-6 h-6 rounded-full border-2 flex items-center justify-center" style="border-color: #8d8d8d;">
+                  <span class="text-xs font-bold text-text-main-light dark:text-text-main-dark leading-none" id="logic-regime-value">--</span>
                 </div>
               </div>
               <div class="indicator-segments" id="logic-regime-segments">
@@ -666,10 +666,10 @@
             <!-- News Momentum Score (-2, -1, 0, 1, 2) -->
             <div class="p-5 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
               <div class="flex items-center space-x-2 mb-3">
-                <span class="material-icons-round text-base text-primary-glow">show_chart</span>
+                <span class="material-icons-round text-base text-primary-glow">newspaper</span>
                 <span class="text-sm font-bold">News Score</span>
-                <div class="w-6 h-6 rounded-full border-2 border-text-main-light dark:border-text-main-dark flex items-center justify-center">
-                  <span class="text-xs font-bold text-text-main-light dark:text-text-main-dark" id="logic-news-value">--</span>
+                <div class="w-6 h-6 rounded-full border-2 flex items-center justify-center" style="border-color: #8d8d8d;">
+                  <span class="text-xs font-bold text-text-main-light dark:text-text-main-dark leading-none" id="logic-news-value">--</span>
                 </div>
               </div>
               <div class="indicator-segments" id="logic-news-segments">
@@ -706,7 +706,7 @@
                 <span class="text-xs font-semibold text-primary-glow" id="logic-alignment-text">--</span>
               </div>
               <div class="flex justify-center items-center gap-4 md:gap-8" id="logic-alignment-icons">
-                <span class="material-icons-round" data-state="unclear" title="Unclear">help</span>
+                <span class="material-icons-round" data-state="unclear" title="Unclear">help_outline</span>
                 <span class="material-icons-round" data-state="conflicting" title="Conflicting">sync_problem</span>
                 <span class="material-icons-round" data-state="aligned" title="Aligned">check</span>
               </div>

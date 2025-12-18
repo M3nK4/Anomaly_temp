@@ -578,10 +578,6 @@
 
       <!-- LOGIC PAGE -->
       <section id="page-logic" class="page-section">
-        <!-- Header -->
-        <div class="mb-6 text-center">
-          <h1 class="text-2xl md:text-3xl font-bold mb-1">Market Logic</h1>
-        </div>
 
         <!-- Granularity -->
         <div class="mb-6">
@@ -654,7 +650,9 @@
               <div class="flex items-center space-x-2 mb-3">
                 <span class="material-icons-round text-base text-primary-glow">balance</span>
                 <span class="text-sm font-bold">Regime Bias</span>
-                <span class="text-sm font-bold text-text-main-light dark:text-text-main-dark" id="logic-regime-value">--</span>
+                <div class="w-6 h-6 rounded-full border-2 border-text-main-light dark:border-text-main-dark flex items-center justify-center">
+                  <span class="text-xs font-bold text-text-main-light dark:text-text-main-dark" id="logic-regime-value">--</span>
+                </div>
               </div>
               <div class="indicator-segments" id="logic-regime-segments">
                 <div class="indicator-segment" data-value="-2"></div>
@@ -670,7 +668,9 @@
               <div class="flex items-center space-x-2 mb-3">
                 <span class="material-icons-round text-base text-primary-glow">show_chart</span>
                 <span class="text-sm font-bold">News Score</span>
-                <span class="text-sm font-bold text-text-main-light dark:text-text-main-dark" id="logic-news-value">--</span>
+                <div class="w-6 h-6 rounded-full border-2 border-text-main-light dark:border-text-main-dark flex items-center justify-center">
+                  <span class="text-xs font-bold text-text-main-light dark:text-text-main-dark" id="logic-news-value">--</span>
+                </div>
               </div>
               <div class="indicator-segments" id="logic-news-segments">
                 <div class="indicator-segment" data-value="-2"></div>
@@ -690,10 +690,10 @@
                 <span class="text-xs font-semibold text-primary-glow" id="logic-signal-text">--</span>
               </div>
               <div class="flex justify-center items-center gap-4 md:gap-6" id="logic-signal-icons">
-                <span class="material-icons-round" data-level="weak" title="Weak">insert_chart_outlined</span>
-                <span class="material-icons-round" data-level="moderate" title="Moderate">insert_chart</span>
-                <span class="material-icons-round" data-level="strong" title="Strong">bar_chart</span>
-                <span class="material-icons-round" data-level="very_strong" title="Very Strong">assessment</span>
+                <span class="material-icons-round" data-level="weak" title="Weak">star_border</span>
+                <span class="material-icons-round" data-level="moderate" title="Moderate">star_half</span>
+                <span class="material-icons-round" data-level="strong" title="Strong">star</span>
+                <span class="material-icons-round" data-level="very_strong" title="Very Strong">stars</span>
               </div>
             </div>
 
@@ -708,7 +708,7 @@
               <div class="flex justify-center items-center gap-4 md:gap-8" id="logic-alignment-icons">
                 <span class="material-icons-round" data-state="unclear" title="Unclear">help</span>
                 <span class="material-icons-round" data-state="conflicting" title="Conflicting">sync_problem</span>
-                <span class="material-icons-round" data-state="aligned" title="Aligned">verified</span>
+                <span class="material-icons-round" data-state="aligned" title="Aligned">check</span>
               </div>
             </div>
           </div>
@@ -743,7 +743,7 @@
         <div class="mb-6">
           <div class="p-5 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
             <div class="flex items-center space-x-2 mb-3">
-              <span class="material-icons-round text-sm text-primary-glow">psychology</span>
+              <span class="material-icons-round text-sm text-primary-glow">settings</span>
               <span class="text-sm font-bold">Neural Framework</span>
             </div>
             <p class="text-sm text-text-sub-light dark:text-text-sub-dark leading-relaxed whitespace-pre-line" id="cot-summary">Loading neural analysis...</p>

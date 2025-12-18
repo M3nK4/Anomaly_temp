@@ -74,7 +74,7 @@
       transition: all 0.3s ease;
     }
     #menuToggle:checked ~ .menu-panel {
-      max-height: 280px; opacity: 1; visibility: visible;
+      max-height: 200px; opacity: 1; visibility: visible;
     }
     .overlay {
       position: fixed; inset: 0; z-index: 40;
@@ -334,24 +334,20 @@
   <label class="overlay" for="menuToggle"></label>
 
   <header class="fixed top-0 left-0 right-0 z-50 px-4 py-3 bg-background-light dark:bg-background-dark">
-    <div class="max-w-4xl mx-auto flex items-center justify-between">
-      <!-- Desktop Navigation (centered, hidden on mobile) -->
-      <nav class="hidden lg:flex items-center space-x-2 mx-auto">
-        <span onclick="navigateTo('home')" data-page="home" class="nav-item active flex items-center space-x-2 px-3 py-2 rounded-xl cursor-pointer hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow">
+    <div class="max-w-4xl mx-auto flex items-center justify-end">
+      <!-- Desktop Navigation (right side, hidden on mobile, icon only) -->
+      <nav class="hidden lg:flex items-center space-x-2">
+        <span onclick="navigateTo('home')" data-page="home" class="nav-item active w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow">
           <span class="material-icons-round text-base">home</span>
-          <span class="font-semibold text-sm">Home</span>
         </span>
-        <span onclick="navigateTo('wallet')" data-page="wallet" class="nav-item flex items-center space-x-2 px-3 py-2 rounded-xl cursor-pointer hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow">
+        <span onclick="navigateTo('wallet')" data-page="wallet" class="nav-item w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow">
           <span class="material-icons-round text-text-sub-light dark:text-text-sub-dark text-base">account_balance_wallet</span>
-          <span class="font-semibold text-sm">Wallet</span>
         </span>
-        <span onclick="navigateTo('logic')" data-page="logic" class="nav-item flex items-center space-x-2 px-3 py-2 rounded-xl cursor-pointer hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow">
+        <span onclick="navigateTo('logic')" data-page="logic" class="nav-item w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow">
           <span class="material-icons-round text-text-sub-light dark:text-text-sub-dark text-base">psychology</span>
-          <span class="font-semibold text-sm">Logic</span>
         </span>
-        <span onclick="navigateTo('info')" data-page="info" class="nav-item flex items-center space-x-2 px-3 py-2 rounded-xl cursor-pointer hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow">
+        <span onclick="navigateTo('info')" data-page="info" class="nav-item w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow">
           <span class="material-icons-round text-text-sub-light dark:text-text-sub-dark text-base">info</span>
-          <span class="font-semibold text-sm">Info</span>
         </span>
       </nav>
 
@@ -365,30 +361,26 @@
       </label>
 
       <!-- Theme toggle (always on the right) -->
-      <button onclick="toggleDarkMode()" class="w-10 h-10 rounded-xl flex items-center justify-center shadow-neu-icon-light dark:shadow-neu-icon-dark hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow bg-background-light dark:bg-background-dark ml-auto lg:ml-0">
+      <button onclick="toggleDarkMode()" class="w-10 h-10 rounded-xl flex items-center justify-center shadow-neu-icon-light dark:shadow-neu-icon-dark hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow bg-background-light dark:bg-background-dark ml-2">
         <span class="material-icons-round text-text-sub-light dark:hidden">dark_mode</span>
         <span class="material-icons-round text-primary-glow hidden dark:block">light_mode</span>
       </button>
     </div>
   </header>
 
-  <nav class="menu-panel fixed top-16 right-4 w-44 z-50 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark" id="menu">
-    <div class="p-2">
-      <span onclick="navigateTo('home')" data-page="home" class="nav-item active flex items-center space-x-3 px-4 py-3 rounded-xl cursor-pointer hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow">
-        <span class="material-icons-round text-sm">home</span>
-        <span class="font-semibold text-sm">Home</span>
+  <nav class="menu-panel fixed top-16 right-4 w-auto z-50 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark" id="menu">
+    <div class="p-2 flex flex-col space-y-2">
+      <span onclick="navigateTo('home')" data-page="home" class="nav-item active w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow">
+        <span class="material-icons-round text-base">home</span>
       </span>
-      <span onclick="navigateTo('wallet')" data-page="wallet" class="nav-item flex items-center space-x-3 px-4 py-3 rounded-xl cursor-pointer hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow">
-        <span class="material-icons-round text-text-sub-light dark:text-text-sub-dark text-sm">account_balance_wallet</span>
-        <span class="font-semibold text-sm">Wallet</span>
+      <span onclick="navigateTo('wallet')" data-page="wallet" class="nav-item w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow">
+        <span class="material-icons-round text-text-sub-light dark:text-text-sub-dark text-base">account_balance_wallet</span>
       </span>
-      <span onclick="navigateTo('logic')" data-page="logic" class="nav-item flex items-center space-x-3 px-4 py-3 rounded-xl cursor-pointer hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow">
-        <span class="material-icons-round text-text-sub-light dark:text-text-sub-dark text-sm">psychology</span>
-        <span class="font-semibold text-sm">Logic</span>
+      <span onclick="navigateTo('logic')" data-page="logic" class="nav-item w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow">
+        <span class="material-icons-round text-text-sub-light dark:text-text-sub-dark text-base">psychology</span>
       </span>
-      <span onclick="navigateTo('info')" data-page="info" class="nav-item flex items-center space-x-3 px-4 py-3 rounded-xl cursor-pointer hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow">
-        <span class="material-icons-round text-text-sub-light dark:text-text-sub-dark text-sm">info</span>
-        <span class="font-semibold text-sm">Info</span>
+      <span onclick="navigateTo('info')" data-page="info" class="nav-item w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow">
+        <span class="material-icons-round text-text-sub-light dark:text-text-sub-dark text-base">info</span>
       </span>
     </div>
   </nav>
@@ -440,7 +432,7 @@
                 </div>
                 <div>
                   <h3 class="text-base font-bold">Latest Trade</h3>
-                  <p class="text-xs text-text-sub-light dark:text-text-sub-dark">Executed at <span class="text-primary-glow" id="home-latest-trade-date">--</span></p>
+                  <p class="text-xs text-primary-glow" id="home-latest-trade-date">--</p>
                 </div>
               </div>
               <p class="text-sm text-text-sub-light dark:text-text-sub-dark leading-relaxed" id="home-latest-trade">Loading...</p>

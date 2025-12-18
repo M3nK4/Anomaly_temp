@@ -627,9 +627,9 @@
           <div class="p-6 rounded-[2rem] shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
             <div class="flex items-center space-x-3 mb-4">
               <div class="w-10 h-10 rounded-full shadow-neu-pressed-light dark:shadow-neu-pressed-dark flex items-center justify-center text-primary-glow">
-                <span class="material-icons-round">lightbulb</span>
+                <span class="material-icons-round">tips_and_updates</span>
               </div>
-              <h3 class="text-base font-bold" id="thesis-title">Current Thesis</h3>
+              <h3 class="text-base font-bold">Thesis</h3>
             </div>
             <p class="text-sm text-text-sub-light dark:text-text-sub-dark leading-relaxed" id="logic-thesis">Loading market thesis...</p>
           </div>
@@ -640,12 +640,10 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <!-- Regime Bias (-2, -1, 0, 1, 2) -->
             <div class="p-5 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
-              <div class="flex items-center justify-between mb-3">
-                <div class="flex items-center space-x-2">
-                  <span class="material-icons-round text-base text-primary-glow">psychology_alt</span>
-                  <span class="text-sm font-bold">Regime Bias</span>
-                </div>
-                <span class="text-xs font-bold text-text-sub-light dark:text-text-sub-dark" id="logic-regime-value">--</span>
+              <div class="flex items-center space-x-2 mb-3">
+                <span class="material-icons-round text-base text-primary-glow">balance</span>
+                <span class="text-sm font-bold">Regime Bias</span>
+                <span class="text-sm font-bold text-text-sub-light dark:text-text-sub-dark" id="logic-regime-value">--</span>
               </div>
               <div class="indicator-segments" id="logic-regime-segments">
                 <div class="indicator-segment" data-value="-2"></div>
@@ -658,12 +656,10 @@
 
             <!-- News Momentum Score (-2, -1, 0, 1, 2) -->
             <div class="p-5 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
-              <div class="flex items-center justify-between mb-3">
-                <div class="flex items-center space-x-2">
-                  <span class="material-icons-round text-base text-primary-glow">trending_up</span>
-                  <span class="text-sm font-bold">News Score</span>
-                </div>
-                <span class="text-xs font-bold text-text-sub-light dark:text-text-sub-dark" id="logic-news-value">--</span>
+              <div class="flex items-center space-x-2 mb-3">
+                <span class="material-icons-round text-base text-primary-glow">show_chart</span>
+                <span class="text-sm font-bold">News Score</span>
+                <span class="text-sm font-bold text-text-sub-light dark:text-text-sub-dark" id="logic-news-value">--</span>
               </div>
               <div class="indicator-segments" id="logic-news-segments">
                 <div class="indicator-segment" data-value="-2"></div>
@@ -680,10 +676,10 @@
                 <span class="text-sm font-bold text-text-main-light dark:text-text-main-dark">Signal Strength</span>
               </div>
               <div class="flex justify-center items-center gap-4 md:gap-6 mb-3" id="logic-signal-icons">
-                <span class="material-icons-round" data-level="weak" title="Weak">brightness_low</span>
-                <span class="material-icons-round" data-level="moderate" title="Moderate">brightness_medium</span>
-                <span class="material-icons-round" data-level="strong" title="Strong">brightness_high</span>
-                <span class="material-icons-round" data-level="very_strong" title="Very Strong">wb_sunny</span>
+                <span class="material-icons-round" data-level="weak" title="Weak">radio_button_unchecked</span>
+                <span class="material-icons-round" data-level="moderate" title="Moderate">lens</span>
+                <span class="material-icons-round" data-level="strong" title="Strong">adjust</span>
+                <span class="material-icons-round" data-level="very_strong" title="Very Strong">circle</span>
               </div>
               <div class="text-center">
                 <span class="text-xs font-semibold text-primary-glow" id="logic-signal-text">--</span>
@@ -696,9 +692,9 @@
                 <span class="text-sm font-bold text-text-main-light dark:text-text-main-dark">Alignment Quality</span>
               </div>
               <div class="flex justify-center items-center gap-4 md:gap-8 mb-3" id="logic-alignment-icons">
-                <span class="material-icons-round" data-state="aligned" title="Aligned">verified</span>
-                <span class="material-icons-round" data-state="conflicting" title="Conflicting">warning</span>
                 <span class="material-icons-round" data-state="unclear" title="Unclear">help</span>
+                <span class="material-icons-round" data-state="conflicting" title="Conflicting">warning</span>
+                <span class="material-icons-round" data-state="aligned" title="Aligned">verified</span>
               </div>
               <div class="text-center">
                 <span class="text-xs font-semibold text-primary-glow" id="logic-alignment-text">--</span>
@@ -736,7 +732,7 @@
         <div class="mb-6">
           <div class="p-5 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
             <div class="flex items-center space-x-2 mb-3">
-              <span class="material-icons-round text-sm text-primary-glow">analytics</span>
+              <span class="material-icons-round text-sm text-primary-glow">timeline</span>
               <span class="text-sm font-bold">Neural Framework</span>
             </div>
             <p class="text-sm text-text-sub-light dark:text-text-sub-dark leading-relaxed whitespace-pre-line" id="cot-summary">Loading neural analysis...</p>
@@ -1183,10 +1179,6 @@
             icon.classList.remove('active');
           }
         });
-
-        // Thesis title - update based on timeframe
-        var timeframeLabel = currentTimeframe.charAt(0).toUpperCase() + currentTimeframe.slice(1);
-        document.getElementById('thesis-title').textContent = timeframeLabel + ' Thesis';
 
         // Thesis
         document.getElementById('logic-thesis').textContent = tfData.thesis || 'No thesis available';

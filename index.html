@@ -306,6 +306,22 @@
       text-shadow: 0 0 12px rgba(251, 173, 96, 0.9);
       transform: scale(1.1);
     }
+
+    /* Signal Strength - larger icons */
+    #logic-signal-icons .material-icons-round {
+      font-size: 42px;
+      color: #d1cfc4;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .dark #logic-signal-icons .material-icons-round {
+      color: #373737;
+    }
+    #logic-signal-icons .material-icons-round.active {
+      color: #FBAD60;
+      text-shadow: 0 0 12px rgba(251, 173, 96, 0.9);
+      transform: scale(1.1);
+    }
   </style>
 </head>
 <body class="bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark transition-colors duration-300 min-h-screen">
@@ -660,19 +676,18 @@
             </div>
 
             <!-- Signal Strength (weak/moderate/strong/very_strong) -->
-            <div class="p-5 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
-              <div class="flex items-center justify-between mb-3">
-                <div class="flex items-center space-x-2">
-                  <span class="material-icons-round text-base text-primary-glow">signal_cellular_alt</span>
-                  <span class="text-sm font-bold">Signal Strength</span>
-                </div>
-                <span class="text-xs font-bold text-text-sub-light dark:text-text-sub-dark" id="logic-signal-text">--</span>
+            <div class="p-6 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark flex flex-col items-center justify-center">
+              <div class="text-center mb-3">
+                <span class="text-sm font-bold text-text-main-light dark:text-text-main-dark">Signal Strength</span>
               </div>
-              <div class="icon-indicator justify-center" id="logic-signal-icons">
+              <div class="flex justify-center items-center gap-6 mb-3" id="logic-signal-icons">
                 <span class="material-icons-round" data-level="weak" title="Weak">signal_cellular_1_bar</span>
                 <span class="material-icons-round" data-level="moderate" title="Moderate">signal_cellular_2_bar</span>
                 <span class="material-icons-round" data-level="strong" title="Strong">signal_cellular_3_bar</span>
                 <span class="material-icons-round" data-level="very_strong" title="Very Strong">signal_cellular_4_bar</span>
+              </div>
+              <div class="text-center">
+                <span class="text-xs font-semibold text-primary-glow" id="logic-signal-text">--</span>
               </div>
             </div>
 

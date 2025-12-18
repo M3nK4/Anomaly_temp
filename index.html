@@ -255,14 +255,14 @@
       width: 8px;
       height: 8px;
       flex: 0 0 8px;
-      background: #8d8d8d;
+      background: #d1cfc4;
       border-radius: 50%;
     }
     .dark .indicator-segment {
       background: #373737;
     }
     .dark .indicator-segment.zero {
-      background: #5a5a5a;
+      background: #373737;
     }
     .indicator-segment.active {
       background: #FBAD60;
@@ -430,20 +430,31 @@
             <div class="h-64 md:h-80 lg:h-96">
               <canvas id="pnlChart"></canvas>
             </div>
-          </div>
-        </div>
 
-        <!-- Latest Trade -->
-        <div class="mb-8">
-          <div class="p-6 rounded-[2rem] shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
-            <h3 class="text-lg font-bold mb-4">Latest Trade</h3>
-            <p class="text-sm text-text-sub-light dark:text-text-sub-dark leading-relaxed" id="home-latest-trade">Loading...</p>
+            <!-- Latest Trade Section -->
+            <div class="mt-6 pt-6 border-t border-text-sub-light dark:border-text-sub-dark border-opacity-20">
+              <div class="flex items-center space-x-3 mb-3">
+                <div class="w-10 h-10 rounded-full shadow-neu-pressed-light dark:shadow-neu-pressed-dark flex items-center justify-center text-primary-glow">
+                  <span class="material-icons-round">swap_horiz</span>
+                </div>
+                <div>
+                  <h3 class="text-base font-bold">Latest Trade</h3>
+                  <p class="text-xs text-text-sub-light dark:text-text-sub-dark">Executed at <span id="home-latest-trade-date">--</span></p>
+                </div>
+              </div>
+              <p class="text-sm text-text-sub-light dark:text-text-sub-dark leading-relaxed" id="home-latest-trade">Loading...</p>
+            </div>
           </div>
         </div>
 
         <!-- Project Description -->
         <div class="p-6 rounded-[2rem] shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
-          <h3 class="text-lg font-bold mb-4">The Concept</h3>
+          <div class="flex items-center space-x-3 mb-4">
+            <div class="w-10 h-10 rounded-full shadow-neu-pressed-light dark:shadow-neu-pressed-dark flex items-center justify-center text-primary-glow">
+              <span class="material-icons-round">article</span>
+            </div>
+            <h3 class="text-lg font-bold">The Concept</h3>
+          </div>
           <div class="text-sm text-text-sub-light dark:text-text-sub-dark leading-relaxed space-y-4">
             <p>Anomaly is a market-adaptive trading system designed to outperform the underlying asset by maintaining continuous alignment with changing market conditions.</p>
 
@@ -739,7 +750,7 @@
         <div class="mb-6">
           <div class="p-5 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
             <div class="flex items-center space-x-2 mb-3">
-              <span class="material-icons-round text-sm text-primary-glow">timeline</span>
+              <span class="material-icons-round text-sm text-primary-glow">smart_toy</span>
               <span class="text-sm font-bold">Neural Framework</span>
             </div>
             <p class="text-sm text-text-sub-light dark:text-text-sub-dark leading-relaxed whitespace-pre-line" id="cot-summary">Loading neural analysis...</p>
@@ -823,6 +834,7 @@
         document.getElementById('data-market').textContent = d.market || '';
         document.getElementById('data-summary').textContent = d.summary || '';
         document.getElementById('home-latest-trade').textContent = d.summary || 'No trade summary available';
+        document.getElementById('home-latest-trade-date').textContent = d.last || '--';
         document.getElementById('data-mrg-bar').style.width = (parseInt(d.mrg) || 0) + '%';
         document.getElementById('data-liq-bar').style.width = (parseInt(d.liq) || 0) + '%';
         document.getElementById('home-data-status').textContent = 'LIVE';
@@ -1201,7 +1213,7 @@
           if (narrativesArray.length > 0) {
             narrativesEl.innerHTML = narrativesArray.map(function(n, idx) {
               var separator = idx < narrativesArray.length - 1 ? '<span class="text-primary-glow mx-2">∙</span>' : '';
-              return '<span class="text-xs text-text-sub-light dark:text-text-sub-dark inline">' + n + '</span>' + separator;
+              return '<span class="text-sm text-text-sub-light dark:text-text-sub-dark inline">' + n + '</span>' + separator;
             }).join('');
           } else {
             narrativesEl.innerHTML = '<span class="text-sm text-text-sub-light dark:text-text-sub-dark">No narratives available</span>';

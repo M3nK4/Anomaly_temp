@@ -280,14 +280,14 @@
     }
     .icon-indicator .material-icons-round {
       font-size: 20px;
-      color: #d1cfc4;
+      color: #d1cfc4 !important;
       transition: all 0.3s ease;
     }
     .dark .icon-indicator .material-icons-round {
-      color: #373737;
+      color: #373737 !important;
     }
     .icon-indicator .material-icons-round.active {
-      color: #FBAD60;
+      color: #FBAD60 !important;
       text-shadow: 0 0 8px rgba(251, 173, 96, 0.8);
     }
   </style>
@@ -560,8 +560,6 @@
                   <div class="indicator-dot small"></div>
                   <div class="indicator-dot small"></div>
                   <div class="indicator-dot small"></div>
-                  <div class="indicator-dot small"></div>
-                  <div class="indicator-dot small"></div>
                 </div>
                 <p class="text-[10px] font-semibold text-text-sub-light dark:text-text-sub-dark" id="tf-daily-conf-text">--</p>
               </div>
@@ -574,8 +572,6 @@
                   <div class="indicator-dot small"></div>
                   <div class="indicator-dot small"></div>
                   <div class="indicator-dot small"></div>
-                  <div class="indicator-dot small"></div>
-                  <div class="indicator-dot small"></div>
                 </div>
                 <p class="text-[10px] font-semibold text-text-sub-light dark:text-text-sub-dark" id="tf-weekly-conf-text">--</p>
               </div>
@@ -585,8 +581,6 @@
                 <span class="material-icons-round text-3xl mb-2 text-text-sub-light dark:text-text-sub-dark" id="tf-monthly-icon">--</span>
                 <p class="text-sm font-bold text-text-sub-light dark:text-text-sub-dark mb-2" id="tf-monthly-dir">--</p>
                 <div class="flex justify-center gap-1 mb-1" id="tf-monthly-confidence">
-                  <div class="indicator-dot small"></div>
-                  <div class="indicator-dot small"></div>
                   <div class="indicator-dot small"></div>
                   <div class="indicator-dot small"></div>
                   <div class="indicator-dot small"></div>
@@ -1164,7 +1158,7 @@
         // Thesis
         document.getElementById('logic-thesis').textContent = tfData.thesis || 'No thesis available';
 
-        // Narratives - handle as comma-separated string (horizontal with dash separators)
+        // Narratives - handle as comma-separated string (horizontal with bullet separators)
         var narrativesEl = document.getElementById('logic-narratives');
         if (tfData.dominantnarratives) {
           var narrativesArray = Array.isArray(tfData.dominantnarratives)
@@ -1173,7 +1167,7 @@
 
           if (narrativesArray.length > 0) {
             narrativesEl.innerHTML = narrativesArray.map(function(n, idx) {
-              var separator = idx < narrativesArray.length - 1 ? '<span class="text-primary-glow mx-2">-</span>' : '';
+              var separator = idx < narrativesArray.length - 1 ? '<span class="text-primary-glow mx-2">∙</span>' : '';
               return '<span class="text-xs text-text-sub-light dark:text-text-sub-dark inline">' + n + '</span>' + separator;
             }).join('');
           } else {
@@ -1226,19 +1220,26 @@
             iconEl.textContent = getDirectionIcon(tfData.direction);
             dirEl.textContent = tfData.direction || '--';
 
-            // Update confidence dots and text
+            // Update confidence dots and text (3 dots: low, medium, high)
             var confidence = tfData.confidence || 0;
             var confidenceNum = 0;
             var confidenceText = '';
-            if (typeof confidence === 'number') {
-              confidenceNum = confidence;
-              confidenceText = confidence + '%';
-            } else if (typeof confidence === 'string') {
-              var confMap = { 'low': 20, 'moderate': 40, 'medium': 60, 'high': 80, 'very high': 100 };
-              confidenceNum = confMap[confidence.toLowerCase()] || 50;
+            var dotsToActivate = 0;
+
+            if (typeof confidence === 'string') {
+              var confLower = confidence.toLowerCase();
               confidenceText = confidence.charAt(0).toUpperCase() + confidence.slice(1);
+
+              // Map to number of dots (1-3)
+              if (confLower === 'low') {
+                dotsToActivate = 1;
+              } else if (confLower === 'medium') {
+                dotsToActivate = 2;
+              } else if (confLower === 'high') {
+                dotsToActivate = 3;
+              }
             }
-            var dotsToActivate = Math.ceil((confidenceNum / 100) * 5);
+
             var dots = confidenceEl.querySelectorAll('.indicator-dot');
 
             // Update dots (always visible, but only active if selected)

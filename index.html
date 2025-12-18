@@ -209,6 +209,67 @@
     .logic-tf-btn {
       transition: all 0.2s ease;
     }
+
+    /* Dot Indicators */
+    .indicator-dots {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .indicator-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #d1cfc4;
+      transition: all 0.3s ease;
+    }
+    .dark .indicator-dot {
+      background: #373737;
+    }
+    .indicator-dot.active {
+      background: #FBAD60;
+      box-shadow: 0 0 8px rgba(251, 173, 96, 0.8);
+    }
+
+    /* Segment Indicators */
+    .indicator-segments {
+      display: flex;
+      gap: 4px;
+      flex: 1;
+    }
+    .indicator-segment {
+      flex: 1;
+      height: 8px;
+      border-radius: 4px;
+      background: #d1cfc4;
+      transition: all 0.3s ease;
+    }
+    .dark .indicator-segment {
+      background: #373737;
+    }
+    .indicator-segment.active {
+      background: #FBAD60;
+      box-shadow: 0 0 6px rgba(251, 173, 96, 0.6);
+    }
+
+    /* Icon Indicators */
+    .icon-indicator {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .icon-indicator .material-icons-round {
+      font-size: 20px;
+      color: #d1cfc4;
+      transition: all 0.3s ease;
+    }
+    .dark .icon-indicator .material-icons-round {
+      color: #373737;
+    }
+    .icon-indicator .material-icons-round.active {
+      color: #FBAD60;
+      text-shadow: 0 0 8px rgba(251, 173, 96, 0.8);
+    }
   </style>
 </head>
 <body class="bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark transition-colors duration-300 min-h-screen">
@@ -461,21 +522,6 @@
           <p class="text-sm text-text-sub-light dark:text-text-sub-dark">AI-driven market analysis across timeframes</p>
         </div>
 
-        <!-- Timeframe Selector -->
-        <div class="mb-6">
-          <div class="flex justify-center space-x-2">
-            <button class="logic-tf-btn px-4 py-2 rounded-xl text-sm font-bold shadow-neu-pressed-light dark:shadow-neu-pressed-dark text-primary-glow bg-background-light dark:bg-background-dark active" data-timeframe="daily">
-              <span class="material-icons-round text-base mr-1 align-middle">today</span>Daily
-            </button>
-            <button class="logic-tf-btn px-4 py-2 rounded-xl text-sm font-bold shadow-neu-flat-light dark:shadow-neu-flat-dark text-text-sub-light dark:text-text-sub-dark hover:text-primary-glow transition-colors bg-background-light dark:bg-background-dark" data-timeframe="weekly">
-              <span class="material-icons-round text-base mr-1 align-middle">date_range</span>Weekly
-            </button>
-            <button class="logic-tf-btn px-4 py-2 rounded-xl text-sm font-bold shadow-neu-flat-light dark:shadow-neu-flat-dark text-text-sub-light dark:text-text-sub-dark hover:text-primary-glow transition-colors bg-background-light dark:bg-background-dark" data-timeframe="monthly">
-              <span class="material-icons-round text-base mr-1 align-middle">calendar_month</span>Monthly
-            </button>
-          </div>
-        </div>
-
         <!-- Timeframe Alignment -->
         <div class="mb-6">
           <div class="p-6 rounded-[2rem] shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
@@ -508,6 +554,19 @@
           </div>
         </div>
 
+        <!-- Thesis Section (moved here) -->
+        <div class="mb-6">
+          <div class="p-6 rounded-[2rem] shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
+            <div class="flex items-center space-x-3 mb-4">
+              <div class="w-10 h-10 rounded-full shadow-neu-pressed-light dark:shadow-neu-pressed-dark flex items-center justify-center text-primary-glow">
+                <span class="material-icons-round">lightbulb</span>
+              </div>
+              <h3 class="text-base font-bold">Current Thesis</h3>
+            </div>
+            <p class="text-sm text-text-sub-light dark:text-text-sub-dark leading-relaxed" id="logic-thesis">Loading market thesis...</p>
+          </div>
+        </div>
+
         <!-- Direction & Confidence Main Card -->
         <div class="mb-6">
           <div class="p-6 rounded-[2rem] shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
@@ -518,17 +577,19 @@
                 </div>
                 <div>
                   <p class="text-xs font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark">Direction</p>
-                  <p class="text-lg font-extrabold" id="logic-direction">--</p>
+                  <p class="text-lg font-extrabold text-primary-glow" id="logic-direction">--</p>
                 </div>
               </div>
               <div class="text-right">
-                <p class="text-xs font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark">Confidence</p>
-                <p class="text-lg font-extrabold text-primary-glow" id="logic-confidence">--%</p>
+                <p class="text-xs font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark mb-2">Confidence</p>
+                <div class="indicator-dots" id="logic-confidence-dots">
+                  <div class="indicator-dot"></div>
+                  <div class="indicator-dot"></div>
+                  <div class="indicator-dot"></div>
+                  <div class="indicator-dot"></div>
+                  <div class="indicator-dot"></div>
+                </div>
               </div>
-            </div>
-            <!-- Confidence Bar -->
-            <div class="progress-track">
-              <div class="progress-fill" id="logic-confidence-bar" style="width: 0%"></div>
             </div>
           </div>
         </div>
@@ -543,19 +604,17 @@
                   <span class="material-icons-round text-base text-primary-glow">psychology_alt</span>
                   <span class="text-sm font-bold">Regime Bias</span>
                 </div>
-                <span class="text-base font-extrabold" id="logic-regime">--</span>
+                <span class="text-xs font-bold text-text-sub-light dark:text-text-sub-dark" id="logic-regime-value">--</span>
               </div>
-              <div class="flex items-center space-x-2 mb-1">
-                <span class="text-xs text-text-sub-light dark:text-text-sub-dark">Bearish</span>
-                <div class="flex-1 h-2 rounded-full shadow-neu-pressed-light dark:shadow-neu-pressed-dark bg-background-light dark:bg-background-dark overflow-hidden">
-                  <div class="h-full flex">
-                    <div class="w-1/2 flex justify-end"><div class="h-full bg-red-500 transition-all duration-300" id="logic-regime-bar-neg" style="width: 0%"></div></div>
-                    <div class="w-1/2 flex justify-start"><div class="h-full bg-green-500 transition-all duration-300" id="logic-regime-bar-pos" style="width: 0%"></div></div>
-                  </div>
-                </div>
-                <span class="text-xs text-text-sub-light dark:text-text-sub-dark">Bullish</span>
+              <div class="indicator-segments" id="logic-regime-segments">
+                <div class="indicator-segment"></div>
+                <div class="indicator-segment"></div>
+                <div class="indicator-segment"></div>
+                <div class="indicator-segment"></div>
+                <div class="indicator-segment"></div>
+                <div class="indicator-segment"></div>
+                <div class="indicator-segment"></div>
               </div>
-              <p class="text-xs text-center text-text-sub-light dark:text-text-sub-dark">-1 to +1</p>
             </div>
 
             <!-- News Momentum Score (numeric: -1 to +1) -->
@@ -565,75 +624,75 @@
                   <span class="material-icons-round text-base text-primary-glow">trending_up</span>
                   <span class="text-sm font-bold">News Score</span>
                 </div>
-                <span class="text-base font-extrabold" id="logic-news">--</span>
+                <span class="text-xs font-bold text-text-sub-light dark:text-text-sub-dark" id="logic-news-value">--</span>
               </div>
-              <div class="flex items-center space-x-2 mb-1">
-                <span class="text-xs text-text-sub-light dark:text-text-sub-dark">Negative</span>
-                <div class="flex-1 h-2 rounded-full shadow-neu-pressed-light dark:shadow-neu-pressed-dark bg-background-light dark:bg-background-dark overflow-hidden">
-                  <div class="h-full flex">
-                    <div class="w-1/2 flex justify-end"><div class="h-full bg-red-500 transition-all duration-300" id="logic-news-bar-neg" style="width: 0%"></div></div>
-                    <div class="w-1/2 flex justify-start"><div class="h-full bg-green-500 transition-all duration-300" id="logic-news-bar-pos" style="width: 0%"></div></div>
-                  </div>
-                </div>
-                <span class="text-xs text-text-sub-light dark:text-text-sub-dark">Positive</span>
+              <div class="indicator-segments" id="logic-news-segments">
+                <div class="indicator-segment"></div>
+                <div class="indicator-segment"></div>
+                <div class="indicator-segment"></div>
+                <div class="indicator-segment"></div>
+                <div class="indicator-segment"></div>
+                <div class="indicator-segment"></div>
+                <div class="indicator-segment"></div>
               </div>
-              <p class="text-xs text-center text-text-sub-light dark:text-text-sub-dark">-1 to +1</p>
             </div>
 
             <!-- Signal Strength (categorical) -->
             <div class="p-5 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
-              <div class="flex items-center justify-between">
+              <div class="flex items-center justify-between mb-3">
                 <div class="flex items-center space-x-2">
                   <span class="material-icons-round text-base text-primary-glow">signal_cellular_alt</span>
                   <span class="text-sm font-bold">Signal Strength</span>
                 </div>
-                <span class="text-base font-extrabold" id="logic-signal">--</span>
+                <span class="text-xs font-bold text-text-sub-light dark:text-text-sub-dark" id="logic-signal-text">--</span>
+              </div>
+              <div class="icon-indicator" id="logic-signal-icons">
+                <span class="material-icons-round">signal_cellular_1_bar</span>
+                <span class="material-icons-round">signal_cellular_2_bar</span>
+                <span class="material-icons-round">signal_cellular_3_bar</span>
+                <span class="material-icons-round">signal_cellular_4_bar</span>
               </div>
             </div>
 
             <!-- Alignment Quality (categorical) -->
             <div class="p-5 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
-              <div class="flex items-center justify-between">
+              <div class="flex items-center justify-between mb-3">
                 <div class="flex items-center space-x-2">
                   <span class="material-icons-round text-base text-primary-glow">tune</span>
                   <span class="text-sm font-bold">Alignment Quality</span>
                 </div>
-                <span class="text-base font-extrabold" id="logic-alignment">--</span>
+                <span class="text-xs font-bold text-text-sub-light dark:text-text-sub-dark" id="logic-alignment-text">--</span>
+              </div>
+              <div class="icon-indicator" id="logic-alignment-icons">
+                <span class="material-icons-round">star_outline</span>
+                <span class="material-icons-round">star_outline</span>
+                <span class="material-icons-round">star_outline</span>
+                <span class="material-icons-round">star_outline</span>
+                <span class="material-icons-round">star_outline</span>
               </div>
             </div>
-          </div>
-        </div>
-
-        <!-- Thesis Section -->
-        <div class="mb-6">
-          <div class="p-6 rounded-[2rem] shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
-            <div class="flex items-center space-x-3 mb-4">
-              <div class="w-10 h-10 rounded-full shadow-neu-pressed-light dark:shadow-neu-pressed-dark flex items-center justify-center text-primary-glow">
-                <span class="material-icons-round">lightbulb</span>
-              </div>
-              <h3 class="text-base font-bold">Current Thesis</h3>
-            </div>
-            <p class="text-sm text-text-sub-light dark:text-text-sub-dark leading-relaxed" id="logic-thesis">Loading market thesis...</p>
           </div>
         </div>
 
         <!-- Narratives & Events Row -->
-        <div class="mb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- Dominant Narratives -->
+        <div class="mb-6">
           <div class="p-5 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
             <div class="flex items-center space-x-2 mb-3">
               <span class="material-icons-round text-sm text-primary-glow">auto_stories</span>
-              <span class="text-xs font-bold">Dominant Narratives</span>
+              <span class="text-sm font-bold">Dominant Narratives</span>
             </div>
-            <ul class="space-y-2" id="logic-narratives">
-              <li class="text-sm text-text-sub-light dark:text-text-sub-dark">Loading...</li>
-            </ul>
+            <div class="flex flex-wrap gap-2" id="logic-narratives">
+              <span class="text-sm text-text-sub-light dark:text-text-sub-dark">Loading...</span>
+            </div>
           </div>
-          <!-- Key Events -->
+        </div>
+
+        <!-- Key Events -->
+        <div class="mb-6">
           <div class="p-5 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
             <div class="flex items-center space-x-2 mb-3">
               <span class="material-icons-round text-sm text-primary-glow">event</span>
-              <span class="text-xs font-bold">Key Events</span>
+              <span class="text-sm font-bold">Key Events</span>
             </div>
             <ul class="space-y-2" id="logic-events">
               <li class="text-sm text-text-sub-light dark:text-text-sub-dark">Loading...</li>
@@ -641,14 +700,14 @@
           </div>
         </div>
 
-        <!-- COT Analysis -->
+        <!-- Neural Framework -->
         <div class="mb-6">
           <div class="p-5 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
             <div class="flex items-center space-x-2 mb-3">
               <span class="material-icons-round text-sm text-primary-glow">analytics</span>
-              <span class="text-sm font-bold">Chain of Thought Analysis</span>
+              <span class="text-sm font-bold">Neural Framework</span>
             </div>
-            <p class="text-sm text-text-sub-light dark:text-text-sub-dark leading-relaxed whitespace-pre-line" id="cot-summary">Loading COT analysis...</p>
+            <p class="text-sm text-text-sub-light dark:text-text-sub-dark leading-relaxed whitespace-pre-line" id="cot-summary">Loading neural analysis...</p>
           </div>
         </div>
       </section>
@@ -1024,13 +1083,10 @@
         return 'trending_flat';
       }
 
-      // Get color class based on direction
+      // Get color class based on direction (always orange)
       function getDirectionColor(direction) {
         if (!direction) return 'text-text-sub-light dark:text-text-sub-dark';
-        var dir = direction.toLowerCase();
-        if (dir === 'long' || dir.includes('bullish') || dir.includes('up')) return 'text-green-500';
-        if (dir === 'short' || dir.includes('bearish') || dir.includes('down')) return 'text-red-500';
-        return 'text-text-sub-light dark:text-text-sub-dark';
+        return 'text-primary-glow';
       }
 
       // Update the main display for selected timeframe
@@ -1042,61 +1098,88 @@
         var directionIconEl = document.getElementById('logic-direction-icon');
         directionEl.textContent = tfData.direction || '--';
         directionIconEl.textContent = getDirectionIcon(tfData.direction);
-        directionEl.className = 'text-xl font-extrabold ' + getDirectionColor(tfData.direction);
+        directionEl.className = 'text-lg font-extrabold ' + getDirectionColor(tfData.direction);
 
-        // Confidence (can be string like "low", "high", "moderate" or a number)
-        var confidence = tfData.confidence || '--';
+        // Confidence (dots indicator)
+        var confidence = tfData.confidence || 0;
         var confidenceNum = 0;
         if (typeof confidence === 'number') {
           confidenceNum = confidence;
-          document.getElementById('logic-confidence').textContent = confidence + '%';
         } else if (typeof confidence === 'string') {
-          // Map string values to percentages for the bar
-          var confMap = { 'low': 25, 'moderate': 50, 'medium': 50, 'high': 75, 'very high': 90 };
+          var confMap = { 'low': 20, 'moderate': 40, 'medium': 60, 'high': 80, 'very high': 100 };
           confidenceNum = confMap[confidence.toLowerCase()] || 50;
-          document.getElementById('logic-confidence').textContent = confidence.charAt(0).toUpperCase() + confidence.slice(1);
         }
-        document.getElementById('logic-confidence-bar').style.width = confidenceNum + '%';
+        var dotsToActivate = Math.ceil((confidenceNum / 100) * 5);
+        var dots = document.querySelectorAll('#logic-confidence-dots .indicator-dot');
+        dots.forEach(function(dot, idx) {
+          if (idx < dotsToActivate) {
+            dot.classList.add('active');
+          } else {
+            dot.classList.remove('active');
+          }
+        });
 
         // Indicators
-        // Regime Bias (-1 to +1)
+        // Regime Bias (-1 to +1) - segments indicator
         var regimeBias = tfData.regimebias != null ? tfData.regimebias : 0;
-        document.getElementById('logic-regime').textContent = regimeBias;
-        var regimePercent = Math.abs(regimeBias) * 100;
-        if (regimeBias < 0) {
-          document.getElementById('logic-regime-bar-neg').style.width = regimePercent + '%';
-          document.getElementById('logic-regime-bar-pos').style.width = '0%';
-        } else if (regimeBias > 0) {
-          document.getElementById('logic-regime-bar-pos').style.width = regimePercent + '%';
-          document.getElementById('logic-regime-bar-neg').style.width = '0%';
-        } else {
-          document.getElementById('logic-regime-bar-neg').style.width = '0%';
-          document.getElementById('logic-regime-bar-pos').style.width = '0%';
-        }
+        document.getElementById('logic-regime-value').textContent = regimeBias.toFixed(2);
+        var regimeSegments = Math.ceil(Math.abs(regimeBias) * 7);
+        var regimeSegs = document.querySelectorAll('#logic-regime-segments .indicator-segment');
+        regimeSegs.forEach(function(seg, idx) {
+          if (idx < regimeSegments) {
+            seg.classList.add('active');
+          } else {
+            seg.classList.remove('active');
+          }
+        });
 
-        // News Momentum Score (-1 to +1)
+        // News Momentum Score (-1 to +1) - segments indicator
         var newsScore = tfData.newsmomentumscore != null ? tfData.newsmomentumscore : 0;
-        document.getElementById('logic-news').textContent = newsScore;
-        var newsPercent = Math.abs(newsScore) * 100;
-        if (newsScore < 0) {
-          document.getElementById('logic-news-bar-neg').style.width = newsPercent + '%';
-          document.getElementById('logic-news-bar-pos').style.width = '0%';
-        } else if (newsScore > 0) {
-          document.getElementById('logic-news-bar-pos').style.width = newsPercent + '%';
-          document.getElementById('logic-news-bar-neg').style.width = '0%';
-        } else {
-          document.getElementById('logic-news-bar-neg').style.width = '0%';
-          document.getElementById('logic-news-bar-pos').style.width = '0%';
-        }
+        document.getElementById('logic-news-value').textContent = newsScore.toFixed(2);
+        var newsSegments = Math.ceil(Math.abs(newsScore) * 7);
+        var newsSegs = document.querySelectorAll('#logic-news-segments .indicator-segment');
+        newsSegs.forEach(function(seg, idx) {
+          if (idx < newsSegments) {
+            seg.classList.add('active');
+          } else {
+            seg.classList.remove('active');
+          }
+        });
 
-        // Signal Strength & Alignment (categorical)
-        document.getElementById('logic-signal').textContent = tfData.signalstrength || '--';
-        document.getElementById('logic-alignment').textContent = tfData.alignmentquality || '--';
+        // Signal Strength (categorical) - icon indicator
+        var signalStrength = tfData.signalstrength || '';
+        document.getElementById('logic-signal-text').textContent = signalStrength;
+        var signalMap = { 'weak': 1, 'low': 1, 'moderate': 2, 'medium': 2, 'strong': 3, 'high': 3, 'very strong': 4, 'very high': 4 };
+        var signalLevel = signalMap[signalStrength.toLowerCase()] || 0;
+        var signalIcons = document.querySelectorAll('#logic-signal-icons .material-icons-round');
+        signalIcons.forEach(function(icon, idx) {
+          if (idx < signalLevel) {
+            icon.classList.add('active');
+          } else {
+            icon.classList.remove('active');
+          }
+        });
+
+        // Alignment Quality (categorical) - star indicator
+        var alignmentQuality = tfData.alignmentquality || '';
+        document.getElementById('logic-alignment-text').textContent = alignmentQuality;
+        var alignmentMap = { 'poor': 1, 'low': 1, 'fair': 2, 'moderate': 3, 'medium': 3, 'good': 4, 'high': 4, 'excellent': 5, 'very high': 5 };
+        var alignmentLevel = alignmentMap[alignmentQuality.toLowerCase()] || 0;
+        var alignmentIcons = document.querySelectorAll('#logic-alignment-icons .material-icons-round');
+        alignmentIcons.forEach(function(icon, idx) {
+          if (idx < alignmentLevel) {
+            icon.classList.add('active');
+            icon.textContent = 'star';
+          } else {
+            icon.classList.remove('active');
+            icon.textContent = 'star_outline';
+          }
+        });
 
         // Thesis
         document.getElementById('logic-thesis').textContent = tfData.thesis || 'No thesis available';
 
-        // Narratives - handle as comma-separated string
+        // Narratives - handle as comma-separated string (badges layout)
         var narrativesEl = document.getElementById('logic-narratives');
         if (tfData.dominantnarratives) {
           var narrativesArray = Array.isArray(tfData.dominantnarratives)
@@ -1105,13 +1188,13 @@
 
           if (narrativesArray.length > 0) {
             narrativesEl.innerHTML = narrativesArray.map(function(n) {
-              return '<li class="text-sm text-text-sub-light dark:text-text-sub-dark flex items-start"><span class="material-icons-round text-xs text-primary-glow mr-2 mt-0.5">chevron_right</span>' + n + '</li>';
+              return '<span class="inline-flex items-center px-3 py-1.5 rounded-xl text-xs font-semibold shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark">' + n + '</span>';
             }).join('');
           } else {
-            narrativesEl.innerHTML = '<li class="text-sm text-text-sub-light dark:text-text-sub-dark">No narratives available</li>';
+            narrativesEl.innerHTML = '<span class="text-sm text-text-sub-light dark:text-text-sub-dark">No narratives available</span>';
           }
         } else {
-          narrativesEl.innerHTML = '<li class="text-sm text-text-sub-light dark:text-text-sub-dark">No narratives available</li>';
+          narrativesEl.innerHTML = '<span class="text-sm text-text-sub-light dark:text-text-sub-dark">No narratives available</span>';
         }
 
         // Events - handle as pipe-separated string
@@ -1195,42 +1278,11 @@
           });
       }
 
-      // Timeframe button handlers
-      document.querySelectorAll('.logic-tf-btn').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-          // Update button states
-          document.querySelectorAll('.logic-tf-btn').forEach(function(b) {
-            b.classList.remove('shadow-neu-pressed-light', 'dark:shadow-neu-pressed-dark', 'text-primary-glow');
-            b.classList.add('shadow-neu-flat-light', 'dark:shadow-neu-flat-dark', 'text-text-sub-light', 'dark:text-text-sub-dark');
-          });
-          this.classList.add('shadow-neu-pressed-light', 'dark:shadow-neu-pressed-dark', 'text-primary-glow');
-          this.classList.remove('shadow-neu-flat-light', 'dark:shadow-neu-flat-dark', 'text-text-sub-light', 'dark:text-text-sub-dark');
-
-          // Update current timeframe and display
-          currentTimeframe = this.dataset.timeframe;
-          if (logicData && logicData[currentTimeframe]) {
-            updateLogicDisplay(logicData[currentTimeframe]);
-          }
-          updateTimeframeCards(logicData || {});
-        });
-      });
-
       // Timeframe card click handlers
       document.querySelectorAll('.logic-tf-card').forEach(function(card) {
         card.addEventListener('click', function() {
           var tf = this.dataset.tf;
           currentTimeframe = tf;
-
-          // Update button states
-          document.querySelectorAll('.logic-tf-btn').forEach(function(b) {
-            if (b.dataset.timeframe === tf) {
-              b.classList.add('shadow-neu-pressed-light', 'dark:shadow-neu-pressed-dark', 'text-primary-glow');
-              b.classList.remove('shadow-neu-flat-light', 'dark:shadow-neu-flat-dark', 'text-text-sub-light', 'dark:text-text-sub-dark');
-            } else {
-              b.classList.remove('shadow-neu-pressed-light', 'dark:shadow-neu-pressed-dark', 'text-primary-glow');
-              b.classList.add('shadow-neu-flat-light', 'dark:shadow-neu-flat-dark', 'text-text-sub-light', 'dark:text-text-sub-dark');
-            }
-          });
 
           if (logicData && logicData[currentTimeframe]) {
             updateLogicDisplay(logicData[currentTimeframe]);

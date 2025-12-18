@@ -280,15 +280,28 @@
     }
     .icon-indicator .material-icons-round {
       font-size: 20px;
-      color: #d1cfc4 !important;
+      color: #d1cfc4;
       transition: all 0.3s ease;
     }
     .dark .icon-indicator .material-icons-round {
-      color: #373737 !important;
+      color: #373737;
     }
     .icon-indicator .material-icons-round.active {
-      color: #FBAD60 !important;
+      color: #FBAD60;
       text-shadow: 0 0 8px rgba(251, 173, 96, 0.8);
+    }
+
+    /* Alignment Quality - larger icons */
+    #logic-alignment-icons .material-icons-round {
+      font-size: 36px;
+      color: #d1cfc4;
+    }
+    .dark #logic-alignment-icons .material-icons-round {
+      color: #373737;
+    }
+    #logic-alignment-icons .material-icons-round.active {
+      color: #FBAD60;
+      text-shadow: 0 0 10px rgba(251, 173, 96, 0.9);
     }
   </style>
 </head>
@@ -369,8 +382,8 @@
       <section id="page-home" class="page-section active">
         <!-- Project Title -->
         <div class="mb-6 text-center">
-          <h1 class="text-3xl md:text-4xl mb-3" style="font-family: 'Comfortaa', cursive; word-spacing: -0.5em; letter-spacing: 0.05em;">The <span id="scramble-word"></span> Protocol</h1>
-          <p class="text-base md:text-xl font-bold mb-0 text-text-main-light dark:text-text-main-dark">Fully autonomous trading system agent</p>
+          <h1 class="text-3xl md:text-4xl mb-3 title-monospace" style="word-spacing: -0.5em; letter-spacing: 0.05em;">The <span id="scramble-word"></span> Protocol</h1>
+          <p class="text-base md:text-xl font-bold mb-0 text-primary-glow">Fully autonomous trading system agent</p>
         </div>
 
         <!-- Chart -->
@@ -1251,18 +1264,18 @@
               }
             });
 
-            // Color based on selection
+            // Color based on selection (icons always gray, only label and text change)
             if (tf === currentTimeframe) {
-              // Selected: everything orange
+              // Selected: label and confidence orange, icon gray
               cardEl.classList.add('shadow-neu-pressed-light', 'dark:shadow-neu-pressed-dark');
               cardEl.classList.remove('shadow-neu-flat-light', 'dark:shadow-neu-flat-dark');
 
               labelEl.className = 'text-sm font-bold tracking-wide text-primary-glow mb-2';
-              iconEl.className = 'material-icons-round text-3xl mb-2 text-primary-glow';
+              iconEl.className = 'material-icons-round text-3xl mb-2 text-text-sub-light dark:text-text-sub-dark';
               dirEl.className = 'text-sm font-bold text-primary-glow mb-2';
 
               // Format confidence text with label
-              confTextEl.innerHTML = '<span class="text-text-sub-light dark:text-text-sub-dark">confidence: </span><span class="text-primary-glow">' + confidenceText + '</span>';
+              confTextEl.innerHTML = '<span class="text-text-sub-light dark:text-text-sub-dark">confidence </span><span class="text-primary-glow">' + confidenceText + '</span>';
             } else {
               // Not selected: everything gray
               cardEl.classList.remove('shadow-neu-pressed-light', 'dark:shadow-neu-pressed-dark');
@@ -1273,7 +1286,7 @@
               dirEl.className = 'text-sm font-bold text-text-sub-light dark:text-text-sub-dark mb-2';
 
               // Format confidence text with label (all gray)
-              confTextEl.innerHTML = '<span class="text-text-sub-light dark:text-text-sub-dark">confidence: ' + confidenceText + '</span>';
+              confTextEl.innerHTML = '<span class="text-text-sub-light dark:text-text-sub-dark">confidence ' + confidenceText + '</span>';
             }
           }
         });

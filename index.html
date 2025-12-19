@@ -986,7 +986,11 @@
       var CHART_API_URL = 'https://305b3ad600d3.ngrok-free.app/webhook/chart';
       var loadingOverlay = document.getElementById('loadingOverlay');
 
-      function hideLoading() { loadingOverlay.classList.add('hidden'); }
+      function hideLoading() {
+        loadingOverlay.classList.add('hidden');
+        // Emit event to signal data has loaded
+        window.dispatchEvent(new Event('dataLoaded'));
+      }
       function showError() {
         document.getElementById('home-data-status').textContent = 'ERROR';
         document.getElementById('home-data-status').style.color = '#64748B';
@@ -1430,7 +1434,7 @@
         }
       }
 
-      // Start animation when home page becomes active
+      // Start animation when home page becomes active AND data is loaded
       function checkHomePage() {
         var homePage = document.getElementById('page-home');
         if (homePage && homePage.classList.contains('active')) {
@@ -1443,9 +1447,14 @@
         }
       }
 
-      // Initialize on page load
-      window.addEventListener('DOMContentLoaded', function() {
-        setTimeout(checkHomePage, 100);
+      // Listen for data loaded event to start animation
+      window.addEventListener('dataLoaded', function() {
+        var homePage = document.getElementById('page-home');
+        if (homePage && homePage.classList.contains('active')) {
+          setTimeout(function() {
+            startTypewriter();
+          }, 300); // Small delay after data loads for smoother transition
+        }
       });
 
       // Re-trigger when navigating back to home
@@ -1454,7 +1463,17 @@
       if (originalNavigateTo) {
         window.navigateTo = function(page) {
           originalNavigateTo(page);
-          setTimeout(checkHomePage, 100);
+          if (page === 'home') {
+            // Reset animation state when navigating to home
+            hasAnimated = false;
+            // Check if data is already loaded (page was already visited)
+            var loadingOverlay = document.getElementById('loadingOverlay');
+            if (loadingOverlay && loadingOverlay.classList.contains('hidden')) {
+              // Data already loaded, start animation immediately
+              setTimeout(checkHomePage, 300);
+            }
+            // Otherwise wait for dataLoaded event
+          }
         };
       }
     })();

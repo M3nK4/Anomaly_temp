@@ -1158,19 +1158,20 @@
           plugins: [glowPlugin]
         });
         fetchChartData('ALL');
-      };
 
-      document.querySelectorAll('.timeframe-btn').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-          document.querySelectorAll('.timeframe-btn').forEach(function(b) {
-            b.classList.remove('shadow-neu-pressed-light', 'dark:shadow-neu-pressed-dark', 'text-primary-glow');
-            b.classList.add('shadow-neu-flat-light', 'dark:shadow-neu-flat-dark', 'text-text-sub-light', 'dark:text-text-sub-dark');
+        // Setup timeframe buttons event listeners
+        document.querySelectorAll('.timeframe-btn').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            document.querySelectorAll('.timeframe-btn').forEach(function(b) {
+              b.classList.remove('shadow-neu-pressed-light', 'dark:shadow-neu-pressed-dark', 'text-primary-glow', 'active');
+              b.classList.add('shadow-neu-flat-light', 'dark:shadow-neu-flat-dark', 'text-text-sub-light', 'dark:text-text-sub-dark');
+            });
+            this.classList.add('shadow-neu-pressed-light', 'dark:shadow-neu-pressed-dark', 'text-primary-glow', 'active');
+            this.classList.remove('shadow-neu-flat-light', 'dark:shadow-neu-flat-dark', 'text-text-sub-light', 'dark:text-text-sub-dark');
+            fetchChartData(this.dataset.timeframe);
           });
-          this.classList.add('shadow-neu-pressed-light', 'dark:shadow-neu-pressed-dark', 'text-primary-glow');
-          this.classList.remove('shadow-neu-flat-light', 'dark:shadow-neu-flat-dark', 'text-text-sub-light', 'dark:text-text-sub-dark');
-          fetchChartData(this.dataset.timeframe);
         });
-      });
+      };
 
       window.addEventListener('DOMContentLoaded', initChart);
     })();

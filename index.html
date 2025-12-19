@@ -475,7 +475,7 @@
           <div class="p-6 rounded-[2rem] shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
             <!-- Project Title - Mobile Only -->
             <div class="mb-4 text-center lg:hidden">
-              <p class="text-base md:text-xl font-bold mb-0 text-primary-glow">Fully autonomous trading system agent</p>
+              <p class="text-base md:text-xl font-bold mb-0 text-primary-glow" id="typewriter-mobile"></p>
             </div>
             <div class="flex flex-col lg:flex-row justify-between items-center mb-4 gap-3 lg:gap-4">
               <div class="flex items-center space-x-3">
@@ -493,7 +493,7 @@
               </div>
               <!-- Project Title - Desktop Only (centered) -->
               <div class="hidden lg:block flex-1 text-center px-4">
-                <p class="text-lg font-bold text-primary-glow whitespace-nowrap">Fully autonomous trading system agent</p>
+                <p class="text-lg font-bold text-primary-glow whitespace-nowrap" id="typewriter-desktop"></p>
               </div>
               <div class="flex space-x-2">
                 <button class="timeframe-btn px-3 py-1.5 rounded-xl text-[10px] font-bold shadow-neu-pressed-light dark:shadow-neu-pressed-dark text-primary-glow bg-background-light dark:bg-background-dark active" data-timeframe="ALL">ALL</button>
@@ -1392,6 +1392,71 @@
           scrambleHeader();
         }, 60000);
       });
+    })();
+
+    // Typewriter Effect for "Fully autonomous trading system agent"
+    (function() {
+      var fullText = 'Fully autonomous trading system agent';
+      var mobileElement = document.getElementById('typewriter-mobile');
+      var desktopElement = document.getElementById('typewriter-desktop');
+      var speed = 50; // milliseconds per character
+      var hasAnimated = false;
+
+      function typewriter(element) {
+        if (!element) return;
+
+        var currentIndex = 0;
+        element.textContent = '';
+
+        function addChar() {
+          if (currentIndex < fullText.length) {
+            element.textContent += fullText[currentIndex];
+            currentIndex++;
+            setTimeout(addChar, speed);
+          }
+        }
+
+        addChar();
+      }
+
+      function startTypewriter() {
+        // Determine which element to animate based on screen size
+        var isMobile = window.innerWidth < 1024; // lg breakpoint
+        var targetElement = isMobile ? mobileElement : desktopElement;
+
+        if (targetElement && !hasAnimated) {
+          typewriter(targetElement);
+          hasAnimated = true;
+        }
+      }
+
+      // Start animation when home page becomes active
+      function checkHomePage() {
+        var homePage = document.getElementById('page-home');
+        if (homePage && homePage.classList.contains('active')) {
+          startTypewriter();
+        } else {
+          // Reset when leaving home page
+          hasAnimated = false;
+          if (mobileElement) mobileElement.textContent = '';
+          if (desktopElement) desktopElement.textContent = '';
+        }
+      }
+
+      // Initialize on page load
+      window.addEventListener('DOMContentLoaded', function() {
+        setTimeout(checkHomePage, 100);
+      });
+
+      // Re-trigger when navigating back to home
+      // Hook into the existing navigateTo function
+      var originalNavigateTo = window.navigateTo;
+      if (originalNavigateTo) {
+        window.navigateTo = function(page) {
+          originalNavigateTo(page);
+          setTimeout(checkHomePage, 100);
+        };
+      }
     })();
 
     // Logic Page Functionality

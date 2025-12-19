@@ -474,8 +474,10 @@
         <div class="mb-8">
           <div class="p-6 rounded-[2rem] shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
             <!-- Project Title - Mobile Only -->
-            <div class="mb-4 text-left lg:hidden">
-              <p class="text-base md:text-xl font-bold mb-0 text-primary-glow" id="typewriter-mobile"></p>
+            <div class="mb-4 flex justify-center lg:hidden">
+              <div class="inline-block">
+                <p class="text-base md:text-xl font-bold mb-0 text-primary-glow text-left" id="typewriter-mobile"></p>
+              </div>
             </div>
             <div class="flex flex-col lg:flex-row justify-between items-center mb-4 gap-3 lg:gap-4">
               <div class="flex items-center space-x-3">
@@ -492,8 +494,10 @@
                 </div>
               </div>
               <!-- Project Title - Desktop Only -->
-              <div class="hidden lg:block flex-1 text-left px-4">
-                <p class="text-lg font-bold text-primary-glow whitespace-nowrap" id="typewriter-desktop"></p>
+              <div class="hidden lg:flex flex-1 justify-center px-4">
+                <div class="inline-block">
+                  <p class="text-lg font-bold text-primary-glow whitespace-nowrap text-left" id="typewriter-desktop"></p>
+                </div>
               </div>
               <div class="flex space-x-2">
                 <button class="timeframe-btn px-3 py-1.5 rounded-xl text-[10px] font-bold shadow-neu-pressed-light dark:shadow-neu-pressed-dark text-primary-glow bg-background-light dark:bg-background-dark active" data-timeframe="ALL">ALL</button>

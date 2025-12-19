@@ -42,7 +42,33 @@
     };
   </script>
   <style>
+    :root {
+      --accent-color: #FFB76A;
+      --accent-r: 255;
+      --accent-g: 183;
+      --accent-b: 106;
+      --accent-glow: rgba(255, 183, 106, 0.8);
+      --accent-glow-soft: rgba(255, 183, 106, 0.4);
+    }
     body { font-family: 'Nunito', sans-serif; }
+
+    /* Prevent text cursor and selection on non-input elements */
+    * {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
+    }
+
+    /* Allow selection only in text areas and inputs */
+    input, textarea {
+      -webkit-user-select: text;
+      -moz-user-select: text;
+      -ms-user-select: text;
+      user-select: text;
+    }
 
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-track { background: transparent; }
@@ -60,54 +86,25 @@
 
     .spinner {
       width: 40px; height: 40px;
-      border: 3px solid #FFB366;
+      border: 3px solid var(--accent-color);
       border-top-color: transparent;
       border-radius: 50%;
       animation: spin 1s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    #menuToggle { display: none; }
-    .menu-panel {
-      max-height: 0; overflow: hidden;
-      opacity: 0; visibility: hidden;
-      transition: all 0.3s ease;
-    }
-    #menuToggle:checked ~ .menu-panel {
-      max-height: 200px; opacity: 1; visibility: visible;
-    }
-    .overlay {
-      position: fixed; inset: 0; z-index: 40;
-      opacity: 0; visibility: hidden;
-      background: rgba(0,0,0,0.2);
-      transition: opacity 0.3s, visibility 0.3s;
-    }
-    #menuToggle:checked ~ .overlay { opacity: 1; visibility: visible; }
-
-    .hamburger span {
-      display: block; width: 100%; height: 2px;
-      border-radius: 2px; transition: all 0.3s ease;
-    }
-    #menuToggle:checked ~ header .hamburger span:nth-child(1) {
-      transform: rotate(45deg) translate(5px, 5px);
-    }
-    #menuToggle:checked ~ header .hamburger span:nth-child(2) { opacity: 0; }
-    #menuToggle:checked ~ header .hamburger span:nth-child(3) {
-      transform: rotate(-45deg) translate(5px, -5px);
-    }
-
     @keyframes livePulse {
       0% {
-        background: #16a34a;
-        box-shadow: 0 0 3px rgba(34, 197, 94, 0.6), 0 0 6px rgba(34, 197, 94, 0.3);
+        background: rgb(0, 180, 0);
+        box-shadow: 0 0 3px rgba(0, 180, 0, 0.6), 0 0 6px rgba(0, 180, 0, 0.3);
       }
       50% {
-        background: #4ade80;
-        box-shadow: 0 0 8px rgba(74, 222, 128, 1), 0 0 14px rgba(74, 222, 128, 0.8), 0 0 20px rgba(74, 222, 128, 0.5);
+        background: rgb(0, 255, 0);
+        box-shadow: 0 0 8px rgba(0, 255, 0, 1), 0 0 14px rgba(0, 255, 0, 0.8), 0 0 20px rgba(0, 255, 0, 0.5);
       }
       100% {
-        background: #16a34a;
-        box-shadow: 0 0 3px rgba(34, 197, 94, 0.6), 0 0 6px rgba(34, 197, 94, 0.3);
+        background: rgb(0, 180, 0);
+        box-shadow: 0 0 3px rgba(0, 180, 0, 0.6), 0 0 6px rgba(0, 180, 0, 0.3);
       }
     }
     .live-pulse {
@@ -128,11 +125,11 @@
     }
 
     .text-primary-glow {
-      color: #FBAD60;
-      text-shadow: 0 0 8px rgba(251, 173, 96, 0.9);
+      color: var(--accent-color);
+      text-shadow: 0 0 8px var(--accent-glow);
     }
     .dark .text-primary-glow {
-      color: #FBAD60;
+      color: var(--accent-color);
     }
 
     .progress-container {
@@ -159,11 +156,11 @@
       height: 100%;
       border-radius: 10px;
       transition: width 1s ease-out;
-      background: #FBAD60;
-      box-shadow: 0 0 6px rgba(251, 173, 96, 0.8);
+      background: var(--accent-color);
+      box-shadow: 0 0 6px var(--accent-glow);
     }
     .dark .progress-fill {
-      background: #FBAD60;
+      background: var(--accent-color);
     }
 
     /* Page sections */
@@ -182,17 +179,35 @@
       box-shadow: inset 6px 6px 10px #1b1b1b, inset -6px -6px 10px #373737;
     }
     .nav-item.active .material-icons-round {
-      color: #FBAD60;
-      text-shadow: 0 0 8px rgba(251, 173, 96, 0.9);
+      color: var(--accent-color);
+      text-shadow: 0 0 8px var(--accent-glow);
     }
     .dark .nav-item.active .material-icons-round {
-      color: #FBAD60;
+      color: var(--accent-color);
     }
 
     /* Text Scramble Effect */
     .title-monospace {
       font-family: 'Source Code Pro', monospace;
       font-weight: 700;
+    }
+
+    /* Header Protocol Name Hover */
+    header .title-monospace {
+      transition: opacity 0.2s ease;
+    }
+    header .title-monospace:hover {
+      opacity: 0.7;
+    }
+
+    /* Header Anomaly Scramble Effect */
+    #header-anomaly-word {
+      display: inline-block;
+      min-width: 7ch;
+    }
+    #header-anomaly-word span {
+      display: inline-block;
+      transition: color 10s ease-out, text-shadow 10s ease-out;
     }
     #scramble-word {
       display: inline-block;
@@ -207,6 +222,13 @@
     .logic-tf-card {
       cursor: pointer;
       transition: box-shadow 0.2s ease;
+    }
+    .logic-tf-card .tf-label {
+      transition: color 0.3s ease, text-shadow 0.3s ease;
+    }
+    .logic-tf-card .material-icons-round,
+    .logic-tf-card p {
+      transition: color 0.3s ease, text-shadow 0.3s ease;
     }
     .logic-tf-btn {
       transition: all 0.2s ease;
@@ -233,8 +255,8 @@
       background: #373737;
     }
     .indicator-dot.active {
-      background: #FBAD60;
-      box-shadow: 0 0 8px rgba(251, 173, 96, 0.8);
+      background: var(--accent-color);
+      box-shadow: 0 0 8px var(--accent-glow);
     }
 
     /* Segment Indicators (Bipolar: -2, -1, 0, 1, 2) */
@@ -265,12 +287,12 @@
       background: #373737;
     }
     .indicator-segment.active {
-      background: #FBAD60;
-      box-shadow: 0 0 6px rgba(251, 173, 96, 0.6);
+      background: var(--accent-color);
+      box-shadow: 0 0 6px var(--accent-glow-soft);
     }
     .indicator-segment.zero.active {
-      background: #FBAD60;
-      box-shadow: 0 0 6px rgba(251, 173, 96, 0.6);
+      background: var(--accent-color);
+      box-shadow: 0 0 6px var(--accent-glow-soft);
     }
 
     /* Icon Indicators */
@@ -288,8 +310,8 @@
       color: #373737;
     }
     .icon-indicator .material-icons-round.active {
-      color: #FBAD60;
-      text-shadow: 0 0 8px rgba(251, 173, 96, 0.8);
+      color: var(--accent-color);
+      text-shadow: 0 0 8px var(--accent-glow);
     }
 
     /* Alignment Quality - larger icons */
@@ -302,8 +324,8 @@
       color: #373737;
     }
     #logic-alignment-icons .material-icons-round.active {
-      color: #FBAD60;
-      text-shadow: 0 0 12px rgba(251, 173, 96, 0.9);
+      color: var(--accent-color);
+      text-shadow: 0 0 12px var(--accent-glow);
       transform: scale(1.1);
     }
 
@@ -317,9 +339,76 @@
       color: #373737;
     }
     #logic-signal-icons .material-icons-round.active {
-      color: #FBAD60;
-      text-shadow: 0 0 12px rgba(251, 173, 96, 0.9);
+      color: var(--accent-color);
+      text-shadow: 0 0 12px var(--accent-glow);
       transform: scale(1.1);
+    }
+
+    /* Expandable Header */
+    .header-expandable {
+      transition: all 0.3s ease;
+    }
+
+    .header-timeframe-row {
+      transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
+      max-height: 200px;
+      opacity: 1;
+    }
+
+    .header-timeframe-row.hidden {
+      max-height: 0;
+      opacity: 0;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      overflow: hidden;
+    }
+
+    /* Header compact mode */
+    .header-expandable.compact .header-timeframe-row {
+      padding-bottom: 0.75rem !important;
+    }
+
+    .header-expandable.compact .timeframe-selector {
+      padding: 1.5rem !important;
+    }
+
+    /* Adjust main padding based on header state */
+    main {
+      transition: padding-top 0.3s ease;
+    }
+
+    body.dashboard-active main {
+      padding-top: 280px;
+    }
+
+    body.dashboard-active.header-compact main {
+      padding-top: 160px;
+    }
+
+    /* Collapsible content inside cards */
+    .tf-collapsible {
+      max-height: 150px;
+      overflow: hidden;
+      transition: max-height 0.3s ease, opacity 0.3s ease, margin 0.3s ease;
+      opacity: 1;
+    }
+
+    /* Compact mode - collapse the bottom content */
+    .header-expandable.compact .tf-collapsible {
+      max-height: 0;
+      opacity: 0;
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+    }
+
+    .header-expandable.compact .tf-label {
+      margin-bottom: 0 !important;
+    }
+
+    /* Selected card emphasis in compact mode */
+    .header-expandable.compact .logic-tf-card.selected .tf-label {
+      color: var(--accent-color);
+      text-shadow: 0 0 12px var(--accent-glow);
     }
   </style>
 </head>
@@ -330,77 +419,67 @@
     <p class="mt-4 text-sm font-semibold text-text-sub-light dark:text-text-sub-dark">Loading...</p>
   </div>
 
-  <input type="checkbox" id="menuToggle">
-  <label class="overlay" for="menuToggle"></label>
-
-  <header class="fixed top-0 left-0 right-0 z-50 px-4 py-3 bg-background-light dark:bg-background-dark">
-    <div class="max-w-4xl mx-auto flex items-center justify-end">
-      <!-- Desktop Navigation (right side, hidden on mobile, icon only) -->
-      <nav class="hidden lg:flex items-center space-x-2">
-        <span onclick="navigateTo('home')" data-page="home" class="nav-item active w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer shadow-neu-icon-light dark:shadow-neu-icon-dark hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow bg-background-light dark:bg-background-dark">
-          <span class="material-icons-round text-xl">home</span>
-        </span>
-        <span onclick="navigateTo('wallet')" data-page="wallet" class="nav-item w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer shadow-neu-icon-light dark:shadow-neu-icon-dark hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow bg-background-light dark:bg-background-dark">
-          <span class="material-icons-round text-text-sub-light dark:text-text-sub-dark text-xl">account_balance_wallet</span>
-        </span>
-        <span onclick="navigateTo('logic')" data-page="logic" class="nav-item w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer shadow-neu-icon-light dark:shadow-neu-icon-dark hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow bg-background-light dark:bg-background-dark">
-          <span class="material-icons-round text-text-sub-light dark:text-text-sub-dark text-xl">settings</span>
-        </span>
-        <span onclick="navigateTo('info')" data-page="info" class="nav-item w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer shadow-neu-icon-light dark:shadow-neu-icon-dark hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow bg-background-light dark:bg-background-dark">
-          <span class="text-text-sub-light dark:text-text-sub-dark text-xl font-bold" style="font-family: 'Roboto Slab', serif;">i</span>
-        </span>
-      </nav>
-
-      <!-- Mobile menu button (visible on mobile only) -->
-      <label class="lg:hidden w-10 h-10 rounded-xl flex items-center justify-center shadow-neu-icon-light dark:shadow-neu-icon-dark hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark cursor-pointer transition-shadow bg-background-light dark:bg-background-dark" for="menuToggle">
-        <div class="hamburger w-5 h-4 flex flex-col justify-between">
-          <span class="bg-text-main-light dark:bg-text-main-dark"></span>
-          <span class="bg-text-main-light dark:bg-text-main-dark"></span>
-          <span class="bg-text-main-light dark:bg-text-main-dark"></span>
+  <header class="fixed top-0 left-0 right-0 z-50 bg-background-light dark:bg-background-dark header-expandable" id="mainHeader">
+    <div class="max-w-4xl mx-auto px-4">
+      <!-- Top row: Protocol name + Navigation -->
+      <div class="flex items-center justify-between py-3">
+        <!-- Protocol Name (left side) -->
+        <div class="flex items-center cursor-pointer pl-2 md:pl-0" onclick="navigateTo('home')">
+          <h1 class="text-base md:text-base lg:text-lg font-bold title-monospace" style="word-spacing: -0.2em; letter-spacing: 0.02em;">
+            <span class="text-text-main-light dark:text-text-main-dark">The</span>
+            <span class="ml-0.5" id="header-anomaly-word"></span>
+            <span class="text-text-main-light dark:text-text-main-dark ml-0.5">Protocol</span>
+          </h1>
         </div>
-      </label>
 
-      <!-- Theme toggle (always on the right) -->
-      <button onclick="toggleDarkMode()" class="w-10 h-10 rounded-xl flex items-center justify-center shadow-neu-icon-light dark:shadow-neu-icon-dark hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow bg-background-light dark:bg-background-dark ml-2">
-        <span class="material-icons-round text-text-sub-light dark:text-text-sub-dark text-xl">brush</span>
-      </button>
+        <!-- Right side: Navigation + Theme toggle -->
+        <div class="flex items-center space-x-2">
+          <!-- Navigation (always visible) -->
+          <nav class="flex items-center space-x-2">
+          <span onclick="navigateTo('home')" data-page="home" class="nav-item active w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer shadow-neu-icon-light dark:shadow-neu-icon-dark hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow bg-background-light dark:bg-background-dark">
+            <span class="material-icons-round text-xl">home</span>
+          </span>
+          <span onclick="navigateTo('dashboard')" data-page="dashboard" class="nav-item w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer shadow-neu-icon-light dark:shadow-neu-icon-dark hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow bg-background-light dark:bg-background-dark">
+            <span class="material-icons-round text-text-sub-light dark:text-text-sub-dark text-xl">dashboard</span>
+          </span>
+          <span onclick="navigateTo('info')" data-page="info" class="nav-item w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer shadow-neu-icon-light dark:shadow-neu-icon-dark hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow bg-background-light dark:bg-background-dark">
+            <span class="text-text-sub-light dark:text-text-sub-dark text-xl font-bold" style="font-family: 'Roboto Slab', serif;">i</span>
+          </span>
+        </nav>
+
+          <!-- Theme toggle (always on the right) -->
+          <button onclick="cycleColorTheme()" class="w-10 h-10 rounded-xl flex items-center justify-center shadow-neu-icon-light dark:shadow-neu-icon-dark hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow bg-background-light dark:bg-background-dark">
+            <span class="material-icons-round text-text-sub-light dark:text-text-sub-dark text-xl">brush</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Timeframe Selector Row (only visible in dashboard) -->
+      <div class="header-timeframe-row hidden pb-3" id="headerTimeframeRow">
+        <div class="w-full p-6 rounded-[2rem] shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark timeframe-selector" id="timeframeSelector" style="margin-left: -1rem; margin-right: -1rem; width: calc(100% + 2rem);">
+          <div class="grid grid-cols-3 gap-3" id="timeframeGrid">
+            <!-- Timeframe cards will be moved here -->
+          </div>
+        </div>
+      </div>
     </div>
   </header>
-
-  <nav class="menu-panel fixed top-16 right-4 w-auto z-50 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark" id="menu">
-    <div class="p-2 flex flex-col space-y-2">
-      <span onclick="navigateTo('home')" data-page="home" class="nav-item active w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer shadow-neu-icon-light dark:shadow-neu-icon-dark hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow bg-background-light dark:bg-background-dark">
-        <span class="material-icons-round text-xl">home</span>
-      </span>
-      <span onclick="navigateTo('wallet')" data-page="wallet" class="nav-item w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer shadow-neu-icon-light dark:shadow-neu-icon-dark hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow bg-background-light dark:bg-background-dark">
-        <span class="material-icons-round text-text-sub-light dark:text-text-sub-dark text-xl">account_balance_wallet</span>
-      </span>
-      <span onclick="navigateTo('logic')" data-page="logic" class="nav-item w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer shadow-neu-icon-light dark:shadow-neu-icon-dark hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow bg-background-light dark:bg-background-dark">
-        <span class="material-icons-round text-text-sub-light dark:text-text-sub-dark text-xl">settings</span>
-      </span>
-      <span onclick="navigateTo('info')" data-page="info" class="nav-item w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer shadow-neu-icon-light dark:shadow-neu-icon-dark hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow bg-background-light dark:bg-background-dark">
-        <span class="text-text-sub-light dark:text-text-sub-dark text-xl font-bold" style="font-family: 'Roboto Slab', serif;">i</span>
-      </span>
-    </div>
-  </nav>
 
   <main class="pt-20 pb-28 px-4">
     <div class="max-w-4xl mx-auto">
 
       <!-- HOME PAGE -->
       <section id="page-home" class="page-section active">
-        <!-- Project Title -->
-        <div class="mb-6 text-center">
-          <h1 class="text-3xl md:text-4xl mb-3 title-monospace" style="word-spacing: -0.5em; letter-spacing: 0.05em;">The <span id="scramble-word"></span> Protocol</h1>
-          <p class="text-base md:text-xl font-bold mb-0 text-primary-glow">Fully autonomous trading system agent</p>
-        </div>
-
         <!-- Chart -->
         <div class="mb-8">
           <div class="p-6 rounded-[2rem] shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
-            <div class="flex justify-between items-center mb-4">
+            <!-- Project Title - Mobile Only -->
+            <div class="mb-4 text-center lg:hidden">
+              <p class="text-base md:text-xl font-bold mb-0 text-primary-glow">Fully autonomous trading system agent</p>
+            </div>
+            <div class="flex flex-col lg:flex-row justify-between items-center mb-4 gap-3 lg:gap-4">
               <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-full shadow-neu-pressed-light dark:shadow-neu-pressed-dark flex items-center justify-center text-primary-glow">
+                <div class="hidden lg:flex w-10 h-10 rounded-full shadow-neu-pressed-light dark:shadow-neu-pressed-dark items-center justify-center text-primary-glow">
                   <span class="material-icons-round">insights</span>
                 </div>
                 <div>
@@ -411,6 +490,10 @@
                     <span class="text-xs font-semibold text-text-sub-light dark:text-text-sub-dark">uptime <span id="home-header-uptime">--</span></span>
                   </div>
                 </div>
+              </div>
+              <!-- Project Title - Desktop Only (centered) -->
+              <div class="hidden lg:block flex-1 text-center px-4">
+                <p class="text-lg font-bold text-primary-glow whitespace-nowrap">Fully autonomous trading system agent</p>
               </div>
               <div class="flex space-x-2">
                 <button class="timeframe-btn px-3 py-1.5 rounded-xl text-[10px] font-bold shadow-neu-pressed-light dark:shadow-neu-pressed-dark text-primary-glow bg-background-light dark:bg-background-dark active" data-timeframe="ALL">ALL</button>
@@ -439,13 +522,313 @@
           </div>
         </div>
 
-        <!-- Project Description -->
+        <!-- Trade Details Cards -->
+        <div class="mb-8">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="p-4 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
+              <div class="flex items-center space-x-2 mb-2">
+                <span class="text-sm font-extrabold text-primary-glow" style="font-family: 'Nunito', sans-serif;">! !</span>
+                <span class="text-xs font-bold">Risk</span>
+              </div>
+              <p class="text-[13px] text-text-sub-light dark:text-text-sub-dark leading-relaxed" id="home-data-risk">--</p>
+            </div>
+            <div class="p-4 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
+              <div class="flex items-center space-x-2 mb-2">
+                <span class="material-icons-round text-sm text-primary-glow">bar_chart</span>
+                <span class="text-xs font-bold">Market</span>
+              </div>
+              <p class="text-[13px] text-text-sub-light dark:text-text-sub-dark leading-relaxed" id="home-data-market">--</p>
+            </div>
+            <div class="p-4 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
+              <div class="flex items-center space-x-2 mb-2">
+                <span class="material-icons-round text-sm text-primary-glow">bolt</span>
+                <span class="text-xs font-bold">Execution</span>
+              </div>
+              <p class="text-[13px] text-text-sub-light dark:text-text-sub-dark leading-relaxed" id="home-data-summary">--</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- DASHBOARD PAGE (unified wallet + logic) -->
+      <section id="page-dashboard" class="page-section">
+
+        <!-- Timeframe Selector (Granularity) - Sticky on scroll -->
+        <div class="mb-6 timeframe-sticky-wrapper" id="timeframeStickyWrapper">
+          <div class="p-4 rounded-[2rem] shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark timeframe-selector" id="timeframeSelector">
+            <div class="grid grid-cols-3 gap-3">
+              <!-- Daily -->
+              <div class="p-3 rounded-xl text-center logic-tf-card shadow-neu-flat-light dark:shadow-neu-flat-dark cursor-pointer selected" data-tf="daily">
+                <p class="text-sm font-bold tracking-wide mb-2 tf-label" id="tf-daily-label">Daily</p>
+                <div class="tf-collapsible">
+                  <span class="material-icons-round text-3xl mb-2 text-text-sub-light dark:text-text-sub-dark" id="tf-daily-icon">--</span>
+                  <p class="text-sm font-bold mb-2" id="tf-daily-dir">--</p>
+                  <div class="flex justify-center gap-1 mb-1" id="tf-daily-confidence">
+                    <div class="indicator-dot small"></div>
+                    <div class="indicator-dot small"></div>
+                    <div class="indicator-dot small"></div>
+                  </div>
+                  <p class="text-[10px] font-semibold text-text-sub-light dark:text-text-sub-dark" id="tf-daily-conf-text">--</p>
+                </div>
+              </div>
+              <!-- Weekly -->
+              <div class="p-3 rounded-xl text-center logic-tf-card shadow-neu-flat-light dark:shadow-neu-flat-dark cursor-pointer" data-tf="weekly">
+                <p class="text-sm font-bold tracking-wide text-text-sub-light dark:text-text-sub-dark mb-2 tf-label" id="tf-weekly-label">Weekly</p>
+                <div class="tf-collapsible">
+                  <span class="material-icons-round text-3xl mb-2 text-text-sub-light dark:text-text-sub-dark" id="tf-weekly-icon">--</span>
+                  <p class="text-sm font-bold text-text-sub-light dark:text-text-sub-dark mb-2" id="tf-weekly-dir">--</p>
+                  <div class="flex justify-center gap-1 mb-1" id="tf-weekly-confidence">
+                    <div class="indicator-dot small"></div>
+                    <div class="indicator-dot small"></div>
+                    <div class="indicator-dot small"></div>
+                  </div>
+                  <p class="text-[10px] font-semibold text-text-sub-light dark:text-text-sub-dark" id="tf-weekly-conf-text">--</p>
+                </div>
+              </div>
+              <!-- Monthly -->
+              <div class="p-3 rounded-xl text-center logic-tf-card shadow-neu-flat-light dark:shadow-neu-flat-dark cursor-pointer" data-tf="monthly">
+                <p class="text-sm font-bold tracking-wide text-text-sub-light dark:text-text-sub-dark mb-2 tf-label" id="tf-monthly-label">Monthly</p>
+                <div class="tf-collapsible">
+                  <span class="material-icons-round text-3xl mb-2 text-text-sub-light dark:text-text-sub-dark" id="tf-monthly-icon">--</span>
+                  <p class="text-sm font-bold text-text-sub-light dark:text-text-sub-dark mb-2" id="tf-monthly-dir">--</p>
+                  <div class="flex justify-center gap-1 mb-1" id="tf-monthly-confidence">
+                    <div class="indicator-dot small"></div>
+                    <div class="indicator-dot small"></div>
+                    <div class="indicator-dot small"></div>
+                  </div>
+                  <p class="text-[10px] font-semibold text-text-sub-light dark:text-text-sub-dark" id="tf-monthly-conf-text">--</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Wallet Overview -->
+        <div class="mb-6 content-below-selector">
+          <div class="p-6 rounded-[2rem] shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
+            <div class="text-center mb-4">
+              <span class="text-xs font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark">Wallet Balance</span>
+              <p class="text-3xl font-extrabold text-primary-glow" id="data-value">$0.00</p>
+            </div>
+            <!-- Stats: Side, PNL, APY, Leverage -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+              <div class="p-3 rounded-xl shadow-neu-pressed-light dark:shadow-neu-pressed-dark bg-background-light dark:bg-background-dark text-center">
+                <p class="text-[10px] font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark">Side</p>
+                <p class="text-lg font-extrabold text-primary-glow" id="data-side">--</p>
+              </div>
+              <div class="p-3 rounded-xl shadow-neu-pressed-light dark:shadow-neu-pressed-dark bg-background-light dark:bg-background-dark text-center">
+                <p class="text-[10px] font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark">PNL</p>
+                <p class="text-lg font-extrabold text-primary-glow" id="data-pnl">--</p>
+              </div>
+              <div class="p-3 rounded-xl shadow-neu-pressed-light dark:shadow-neu-pressed-dark bg-background-light dark:bg-background-dark text-center">
+                <p class="text-[10px] font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark">APY</p>
+                <p class="text-lg font-extrabold text-primary-glow" id="data-apy">--</p>
+              </div>
+              <div class="p-3 rounded-xl shadow-neu-pressed-light dark:shadow-neu-pressed-dark bg-background-light dark:bg-background-dark text-center">
+                <p class="text-[10px] font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark">Leverage</p>
+                <p class="text-lg font-extrabold text-primary-glow" id="data-lev">--</p>
+              </div>
+            </div>
+            <!-- Progress Bars -->
+            <div class="progress-container mt-8">
+              <div class="flex-1">
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="text-xs font-bold text-text-main-light dark:text-text-main-dark">Margin</span>
+                  <span class="text-xs font-bold text-primary-glow" id="data-mrg">0%</span>
+                </div>
+                <div class="progress-track mb-2">
+                  <div class="progress-fill" id="data-mrg-bar" style="width: 0%"></div>
+                </div>
+                <p class="text-[10px] text-text-sub-light dark:text-text-sub-dark">margin consumed by the BTC position specifically</p>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="text-xs font-bold text-text-main-light dark:text-text-main-dark">Liquidation</span>
+                  <span class="text-xs font-bold text-primary-glow" id="data-liq">0%</span>
+                </div>
+                <div class="progress-track mb-2">
+                  <div class="progress-fill" id="data-liq-bar" style="width: 0%"></div>
+                </div>
+                <p class="text-[10px] text-text-sub-light dark:text-text-sub-dark">distance between the current market price and the liquidation threshold price</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Thesis Section -->
+        <div class="mb-6">
+          <div class="p-6 rounded-[2rem] shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
+            <div class="flex items-center space-x-3 mb-4">
+              <div class="w-10 h-10 rounded-full shadow-neu-pressed-light dark:shadow-neu-pressed-dark flex items-center justify-center text-primary-glow">
+                <span class="material-icons-round">app_registration</span>
+              </div>
+              <div>
+                <h3 class="text-base font-bold">Thesis</h3>
+                <p class="text-xs text-primary-glow">summary of the timeframe signal and its implication</p>
+              </div>
+            </div>
+            <p class="text-sm text-text-sub-light dark:text-text-sub-dark leading-relaxed" id="logic-thesis">Loading market thesis...</p>
+          </div>
+        </div>
+
+        <!-- Key Indicators Grid -->
+        <div class="mb-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Regime Bias -->
+            <div class="p-5 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
+              <div class="flex items-center space-x-2 mb-3">
+                <span class="material-icons-round text-base text-primary-glow">balance</span>
+                <span class="text-sm font-bold">Regime Bias</span>
+                <div class="w-6 h-6 rounded-full border-2 flex items-center justify-center" style="border-color: #5a5a5a;">
+                  <span class="text-xs font-bold text-primary-glow leading-none" id="logic-regime-value">--</span>
+                </div>
+              </div>
+              <div class="indicator-segments mb-3" id="logic-regime-segments">
+                <div class="indicator-segment" data-value="-2"></div>
+                <div class="indicator-segment" data-value="-1"></div>
+                <div class="indicator-segment zero" data-value="0"></div>
+                <div class="indicator-segment" data-value="1"></div>
+                <div class="indicator-segment" data-value="2"></div>
+              </div>
+              <div class="text-xs mt-2">
+                <span class="font-semibold text-primary-glow">structural backdrop</span>
+                <span class="text-text-sub-light dark:text-text-sub-dark"> degree to which the newsflow reinforces a broader bullish/bearish regime</span>
+              </div>
+            </div>
+
+            <!-- News Momentum Score -->
+            <div class="p-5 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
+              <div class="flex items-center space-x-2 mb-3">
+                <span class="material-icons-round text-base text-primary-glow">newspaper</span>
+                <span class="text-sm font-bold">News Score</span>
+                <div class="w-6 h-6 rounded-full border-2 flex items-center justify-center" style="border-color: #5a5a5a;">
+                  <span class="text-xs font-bold text-primary-glow leading-none" id="logic-news-value">--</span>
+                </div>
+              </div>
+              <div class="indicator-segments mb-3" id="logic-news-segments">
+                <div class="indicator-segment" data-value="-2"></div>
+                <div class="indicator-segment" data-value="-1"></div>
+                <div class="indicator-segment zero" data-value="0"></div>
+                <div class="indicator-segment" data-value="1"></div>
+                <div class="indicator-segment" data-value="2"></div>
+              </div>
+              <div class="text-xs mt-2">
+                <span class="font-semibold text-primary-glow">more tactical than regime</span>
+                <span class="text-text-sub-light dark:text-text-sub-dark"> directional impulse of the newsflow within the timeframe</span>
+              </div>
+            </div>
+
+            <!-- Signal Strength -->
+            <div class="p-5 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark flex flex-col items-center justify-center">
+              <div class="text-center mb-1">
+                <span class="text-sm font-bold text-text-main-light dark:text-text-main-dark">Signal Strength</span>
+              </div>
+              <div class="text-center mb-3">
+                <span class="text-xs text-text-sub-light dark:text-text-sub-dark">how clean the net directional signal is</span>
+              </div>
+              <div class="flex justify-center items-center gap-4 md:gap-6 mb-2" id="logic-signal-icons">
+                <span class="material-icons-round" data-level="weak" title="Weak">star_border</span>
+                <span class="material-icons-round" data-level="moderate" title="Moderate">star_half</span>
+                <span class="material-icons-round" data-level="strong" title="Strong">star</span>
+                <span class="material-icons-round" data-level="very_strong" title="Very Strong">stars</span>
+              </div>
+              <div class="text-center">
+                <span class="text-sm font-semibold text-primary-glow" id="logic-signal-text">--</span>
+              </div>
+            </div>
+
+            <!-- Alignment Quality -->
+            <div class="p-5 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark flex flex-col items-center justify-center">
+              <div class="text-center mb-1">
+                <span class="text-sm font-bold text-text-main-light dark:text-text-main-dark">Alignment Quality</span>
+              </div>
+              <div class="text-center mb-3">
+                <span class="text-xs text-text-sub-light dark:text-text-sub-dark">consistency between regime and momentum</span>
+              </div>
+              <div class="flex justify-center items-center gap-4 md:gap-8 mb-2" id="logic-alignment-icons">
+                <span class="material-icons-round" data-state="unclear" title="Unclear">help_outline</span>
+                <span class="material-icons-round" data-state="conflicting" title="Conflicting">sync_problem</span>
+                <span class="material-icons-round" data-state="aligned" title="Aligned">check</span>
+              </div>
+              <div class="text-center">
+                <span class="text-sm font-semibold text-primary-glow" id="logic-alignment-text">--</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Signal Attribution -->
+        <div class="mb-6">
+          <div class="p-6 rounded-[2rem] shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
+            <div class="flex items-center space-x-3 mb-4">
+              <div class="w-10 h-10 rounded-full shadow-neu-pressed-light dark:shadow-neu-pressed-dark flex items-center justify-center text-primary-glow">
+                <span class="material-icons-round">device_hub</span>
+              </div>
+              <div>
+                <h3 class="text-base font-bold">Signal Attribution</h3>
+                <p class="text-xs text-primary-glow">events driving the timeframe thesis</p>
+              </div>
+            </div>
+
+            <!-- Key Events Section -->
+            <div class="mb-4">
+              <div class="flex items-center space-x-2 mb-3">
+                <span class="material-icons-round text-sm text-primary-glow">event</span>
+                <span class="text-sm font-bold">Key Events</span>
+              </div>
+              <ul class="space-y-2" id="logic-events">
+                <li class="text-sm text-text-sub-light dark:text-text-sub-dark">Loading...</li>
+              </ul>
+            </div>
+
+            <!-- Separator -->
+            <div class="relative my-4">
+              <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-text-sub-light dark:via-text-sub-dark to-transparent opacity-30"></div>
+            </div>
+
+            <!-- Dominant Narratives Section -->
+            <div class="mt-6">
+              <div class="flex items-center space-x-2 mb-3">
+                <span class="material-icons-round text-sm text-primary-glow">auto_stories</span>
+                <span class="text-sm font-bold">Dominant Narratives</span>
+              </div>
+              <div class="flex flex-wrap gap-x-4 gap-y-1" id="logic-narratives">
+                <span class="text-sm text-text-sub-light dark:text-text-sub-dark">Loading...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Neural Framework -->
+        <div class="mb-6">
+          <div class="p-6 rounded-[2rem] shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
+            <div class="flex items-center space-x-3 mb-4">
+              <div class="w-10 h-10 rounded-full shadow-neu-pressed-light dark:shadow-neu-pressed-dark flex items-center justify-center text-primary-glow">
+                <span class="material-icons-round">psychology</span>
+              </div>
+              <div>
+                <h3 class="text-base font-bold">Neural Framework</h3>
+                <p class="text-xs text-primary-glow">model logic behind the scores</p>
+              </div>
+            </div>
+            <p class="text-sm text-text-sub-light dark:text-text-sub-dark leading-relaxed whitespace-pre-line" id="cot-summary">Loading neural analysis...</p>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- INFO PAGE -->
+      <section id="page-info" class="page-section">
+        <!-- Design Philosophy -->
         <div class="p-6 rounded-[2rem] shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
           <div class="flex items-center space-x-3 mb-4">
             <div class="w-10 h-10 rounded-full shadow-neu-pressed-light dark:shadow-neu-pressed-dark flex items-center justify-center text-primary-glow">
               <span class="material-icons-round">auto_awesome</span>
             </div>
-            <h3 class="text-lg font-bold">The Concept</h3>
+            <div>
+              <h3 class="text-lg font-bold">Design Philosophy</h3>
+              <p class="text-xs text-primary-glow">the next-gen trading engine</p>
+            </div>
           </div>
           <div class="text-sm text-text-sub-light dark:text-text-sub-dark leading-relaxed space-y-4">
             <p>Anomaly is a market-adaptive trading system designed to outperform the underlying asset by maintaining continuous alignment with changing market conditions.</p>
@@ -460,285 +843,6 @@
 
             <p>In this sense, Anomaly is not a conventional trading strategy, but a technological framework for sustained market engagement.</p>
           </div>
-        </div>
-      </section>
-
-      <!-- WALLET PAGE -->
-      <section id="page-wallet" class="page-section">
-        <!-- Wallet Balance -->
-        <div class="mb-6">
-          <div class="p-6 rounded-[2rem] shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
-            <span class="text-xs font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark">Wallet Balance</span>
-            <p class="text-3xl font-extrabold" id="data-value">$0.00</p>
-          </div>
-        </div>
-
-        <!-- Stats: Side, PNL, Leverage -->
-        <div class="mb-6">
-          <div class="grid grid-cols-3 gap-4">
-            <div class="p-4 rounded-3xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark text-center">
-              <div class="w-10 h-10 mx-auto rounded-full shadow-neu-pressed-light dark:shadow-neu-pressed-dark flex items-center justify-center text-primary-glow mb-2">
-                <span class="material-icons-round text-lg">swap_vert</span>
-              </div>
-              <p class="text-[10px] font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark">Side</p>
-              <p class="text-lg font-extrabold" id="data-side">--</p>
-            </div>
-            <div class="p-4 rounded-3xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark text-center">
-              <div class="w-10 h-10 mx-auto rounded-full shadow-neu-pressed-light dark:shadow-neu-pressed-dark flex items-center justify-center text-primary-glow mb-2">
-                <span class="material-icons-round text-lg">account_balance</span>
-              </div>
-              <p class="text-[10px] font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark">PNL</p>
-              <p class="text-lg font-extrabold" id="data-pnl">--</p>
-            </div>
-            <div class="p-4 rounded-3xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark text-center">
-              <div class="w-10 h-10 mx-auto rounded-full shadow-neu-pressed-light dark:shadow-neu-pressed-dark flex items-center justify-center text-primary-glow mb-2">
-                <span class="material-icons-round text-lg">speed</span>
-              </div>
-              <p class="text-[10px] font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark">Leverage</p>
-              <p class="text-lg font-extrabold" id="data-lev">--</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Progress Bars -->
-        <div class="mb-6">
-          <div class="p-6 rounded-[2rem] shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
-            <div class="progress-container">
-              <div class="flex-1">
-                <div class="flex justify-between items-center mb-2">
-                  <div class="flex items-center space-x-2">
-                    <span class="text-xs font-bold text-text-main-light dark:text-text-main-dark">Margin</span>
-                    <span class="text-xs font-bold text-text-main-light dark:text-text-main-dark" id="data-mrg">0%</span>
-                  </div>
-                </div>
-                <div class="progress-track">
-                  <div class="progress-fill" id="data-mrg-bar" style="width: 0%"></div>
-                </div>
-              </div>
-              <div class="flex-1">
-                <div class="flex justify-between items-center mb-2">
-                  <div class="flex items-center space-x-2">
-                    <span class="text-xs font-bold text-text-main-light dark:text-text-main-dark">Liquidation</span>
-                    <span class="text-xs font-bold text-text-main-light dark:text-text-main-dark" id="data-liq">0%</span>
-                  </div>
-                </div>
-                <div class="progress-track">
-                  <div class="progress-fill" id="data-liq-bar" style="width: 0%"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Trade Details -->
-        <div class="mb-6">
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="p-4 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
-              <div class="flex items-center space-x-2 mb-2">
-                <span class="text-sm font-extrabold text-primary-glow" style="font-family: 'Nunito', sans-serif;">! !</span>
-                <span class="text-xs font-bold">Risk</span>
-              </div>
-              <p class="text-[13px] text-text-sub-light dark:text-text-sub-dark leading-relaxed" id="data-risk">--</p>
-            </div>
-            <div class="p-4 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
-              <div class="flex items-center space-x-2 mb-2">
-                <span class="material-icons-round text-sm text-primary-glow">bar_chart</span>
-                <span class="text-xs font-bold">Market</span>
-              </div>
-              <p class="text-[13px] text-text-sub-light dark:text-text-sub-dark leading-relaxed" id="data-market">--</p>
-            </div>
-            <div class="p-4 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
-              <div class="flex items-center space-x-2 mb-2">
-                <span class="material-icons-round text-sm text-primary-glow">bolt</span>
-                <span class="text-xs font-bold">Execution</span>
-              </div>
-              <p class="text-[13px] text-text-sub-light dark:text-text-sub-dark leading-relaxed" id="data-summary">--</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- LOGIC PAGE -->
-      <section id="page-logic" class="page-section">
-
-        <!-- Granularity -->
-        <div class="mb-6">
-          <div class="p-6 rounded-[2rem] shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
-            <div class="flex items-center space-x-3 mb-4">
-              <div class="w-10 h-10 rounded-full shadow-neu-pressed-light dark:shadow-neu-pressed-dark flex items-center justify-center text-primary-glow">
-                <span class="material-icons-round">tune</span>
-              </div>
-              <h3 class="text-base font-bold">Granularity</h3>
-            </div>
-            <div class="grid grid-cols-3 gap-3">
-              <!-- Daily -->
-              <div class="p-3 rounded-xl text-center logic-tf-card shadow-neu-flat-light dark:shadow-neu-flat-dark" data-tf="daily">
-                <p class="text-sm font-bold tracking-wide text-text-sub-light dark:text-text-sub-dark mb-2" id="tf-daily-label">Daily</p>
-                <span class="material-icons-round text-3xl mb-2 text-text-sub-light dark:text-text-sub-dark" id="tf-daily-icon">--</span>
-                <p class="text-sm font-bold text-text-sub-light dark:text-text-sub-dark mb-2" id="tf-daily-dir">--</p>
-                <div class="flex justify-center gap-1 mb-1" id="tf-daily-confidence">
-                  <div class="indicator-dot small"></div>
-                  <div class="indicator-dot small"></div>
-                  <div class="indicator-dot small"></div>
-                </div>
-                <p class="text-[10px] font-semibold text-text-sub-light dark:text-text-sub-dark" id="tf-daily-conf-text">--</p>
-              </div>
-              <!-- Weekly -->
-              <div class="p-3 rounded-xl text-center logic-tf-card shadow-neu-flat-light dark:shadow-neu-flat-dark" data-tf="weekly">
-                <p class="text-sm font-bold tracking-wide text-text-sub-light dark:text-text-sub-dark mb-2" id="tf-weekly-label">Weekly</p>
-                <span class="material-icons-round text-3xl mb-2 text-text-sub-light dark:text-text-sub-dark" id="tf-weekly-icon">--</span>
-                <p class="text-sm font-bold text-text-sub-light dark:text-text-sub-dark mb-2" id="tf-weekly-dir">--</p>
-                <div class="flex justify-center gap-1 mb-1" id="tf-weekly-confidence">
-                  <div class="indicator-dot small"></div>
-                  <div class="indicator-dot small"></div>
-                  <div class="indicator-dot small"></div>
-                </div>
-                <p class="text-[10px] font-semibold text-text-sub-light dark:text-text-sub-dark" id="tf-weekly-conf-text">--</p>
-              </div>
-              <!-- Monthly -->
-              <div class="p-3 rounded-xl text-center logic-tf-card shadow-neu-flat-light dark:shadow-neu-flat-dark" data-tf="monthly">
-                <p class="text-sm font-bold tracking-wide text-text-sub-light dark:text-text-sub-dark mb-2" id="tf-monthly-label">Monthly</p>
-                <span class="material-icons-round text-3xl mb-2 text-text-sub-light dark:text-text-sub-dark" id="tf-monthly-icon">--</span>
-                <p class="text-sm font-bold text-text-sub-light dark:text-text-sub-dark mb-2" id="tf-monthly-dir">--</p>
-                <div class="flex justify-center gap-1 mb-1" id="tf-monthly-confidence">
-                  <div class="indicator-dot small"></div>
-                  <div class="indicator-dot small"></div>
-                  <div class="indicator-dot small"></div>
-                </div>
-                <p class="text-[10px] font-semibold text-text-sub-light dark:text-text-sub-dark" id="tf-monthly-conf-text">--</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Thesis Section (moved here) -->
-        <div class="mb-6">
-          <div class="p-6 rounded-[2rem] shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
-            <div class="flex items-center space-x-3 mb-4">
-              <div class="w-10 h-10 rounded-full shadow-neu-pressed-light dark:shadow-neu-pressed-dark flex items-center justify-center text-primary-glow">
-                <span class="material-icons-round">tips_and_updates</span>
-              </div>
-              <h3 class="text-base font-bold">Thesis</h3>
-            </div>
-            <p class="text-sm text-text-sub-light dark:text-text-sub-dark leading-relaxed" id="logic-thesis">Loading market thesis...</p>
-          </div>
-        </div>
-
-        <!-- Key Indicators Grid -->
-        <div class="mb-6">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <!-- Regime Bias (-2, -1, 0, 1, 2) -->
-            <div class="p-5 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
-              <div class="flex items-center space-x-2 mb-3">
-                <span class="material-icons-round text-base text-primary-glow">balance</span>
-                <span class="text-sm font-bold">Regime Bias</span>
-                <div class="w-6 h-6 rounded-full border-2 flex items-center justify-center" style="border-color: #5a5a5a;">
-                  <span class="text-xs font-bold text-primary-glow leading-none" id="logic-regime-value">--</span>
-                </div>
-              </div>
-              <div class="indicator-segments" id="logic-regime-segments">
-                <div class="indicator-segment" data-value="-2"></div>
-                <div class="indicator-segment" data-value="-1"></div>
-                <div class="indicator-segment zero" data-value="0"></div>
-                <div class="indicator-segment" data-value="1"></div>
-                <div class="indicator-segment" data-value="2"></div>
-              </div>
-            </div>
-
-            <!-- News Momentum Score (-2, -1, 0, 1, 2) -->
-            <div class="p-5 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
-              <div class="flex items-center space-x-2 mb-3">
-                <span class="material-icons-round text-base text-primary-glow">newspaper</span>
-                <span class="text-sm font-bold">News Score</span>
-                <div class="w-6 h-6 rounded-full border-2 flex items-center justify-center" style="border-color: #5a5a5a;">
-                  <span class="text-xs font-bold text-primary-glow leading-none" id="logic-news-value">--</span>
-                </div>
-              </div>
-              <div class="indicator-segments" id="logic-news-segments">
-                <div class="indicator-segment" data-value="-2"></div>
-                <div class="indicator-segment" data-value="-1"></div>
-                <div class="indicator-segment zero" data-value="0"></div>
-                <div class="indicator-segment" data-value="1"></div>
-                <div class="indicator-segment" data-value="2"></div>
-              </div>
-            </div>
-
-            <!-- Signal Strength (weak/moderate/strong/very_strong) -->
-            <div class="p-6 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark flex flex-col items-center justify-center">
-              <div class="text-center mb-2">
-                <span class="text-sm font-bold text-text-main-light dark:text-text-main-dark">Signal Strength</span>
-              </div>
-              <div class="text-center mb-3">
-                <span class="text-xs font-semibold text-primary-glow" id="logic-signal-text">--</span>
-              </div>
-              <div class="flex justify-center items-center gap-4 md:gap-6" id="logic-signal-icons">
-                <span class="material-icons-round" data-level="weak" title="Weak">star_border</span>
-                <span class="material-icons-round" data-level="moderate" title="Moderate">star_half</span>
-                <span class="material-icons-round" data-level="strong" title="Strong">star</span>
-                <span class="material-icons-round" data-level="very_strong" title="Very Strong">stars</span>
-              </div>
-            </div>
-
-            <!-- Alignment Quality (aligned/conflicting/unclear) -->
-            <div class="p-6 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark flex flex-col items-center justify-center">
-              <div class="text-center mb-2">
-                <span class="text-sm font-bold text-text-main-light dark:text-text-main-dark">Alignment Quality</span>
-              </div>
-              <div class="text-center mb-3">
-                <span class="text-xs font-semibold text-primary-glow" id="logic-alignment-text">--</span>
-              </div>
-              <div class="flex justify-center items-center gap-4 md:gap-8" id="logic-alignment-icons">
-                <span class="material-icons-round" data-state="unclear" title="Unclear">help_outline</span>
-                <span class="material-icons-round" data-state="conflicting" title="Conflicting">sync_problem</span>
-                <span class="material-icons-round" data-state="aligned" title="Aligned">check</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Narratives & Events Row -->
-        <div class="mb-6 grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-          <!-- Dominant Narratives -->
-          <div class="p-5 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
-            <div class="flex items-center space-x-2 mb-3">
-              <span class="material-icons-round text-sm text-primary-glow">auto_stories</span>
-              <span class="text-sm font-bold">Dominant Narratives</span>
-            </div>
-            <div class="flex flex-wrap gap-x-4 gap-y-1" id="logic-narratives">
-              <span class="text-sm text-text-sub-light dark:text-text-sub-dark">Loading...</span>
-            </div>
-          </div>
-
-          <!-- Key Events -->
-          <div class="p-5 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
-            <div class="flex items-center space-x-2 mb-3">
-              <span class="material-icons-round text-sm text-primary-glow">event</span>
-              <span class="text-sm font-bold">Key Events</span>
-            </div>
-            <ul class="space-y-2" id="logic-events">
-              <li class="text-sm text-text-sub-light dark:text-text-sub-dark">Loading...</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Neural Framework -->
-        <div class="mb-6">
-          <div class="p-5 rounded-2xl shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
-            <div class="flex items-center space-x-2 mb-3">
-              <span class="material-icons-round text-sm text-primary-glow">settings</span>
-              <span class="text-sm font-bold">Neural Framework</span>
-            </div>
-            <p class="text-sm text-text-sub-light dark:text-text-sub-dark leading-relaxed whitespace-pre-line" id="cot-summary">Loading neural analysis...</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- INFO PAGE -->
-      <section id="page-info" class="page-section">
-        <div class="p-6 rounded-[2rem] shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark text-center">
-          <span class="material-icons-round text-6xl text-primary-glow mb-4">info</span>
-          <h2 class="text-2xl font-bold mb-2">Info</h2>
-          <p class="text-text-sub-light dark:text-text-sub-dark">Coming soon...</p>
         </div>
       </section>
 
@@ -767,16 +871,112 @@
         item.classList.add('active');
       });
 
-      document.getElementById('menuToggle').checked = false;
+      // Handle timeframe selector in header for dashboard
+      var headerTimeframeRow = document.getElementById('headerTimeframeRow');
+      var timeframeGrid = document.getElementById('timeframeGrid');
+      var originalTimeframeWrapper = document.getElementById('timeframeStickyWrapper');
+
+      if (page === 'dashboard') {
+        // Move timeframe cards to header
+        document.body.classList.add('dashboard-active');
+        document.body.classList.remove('header-compact');
+
+        if (originalTimeframeWrapper && timeframeGrid) {
+          var cards = originalTimeframeWrapper.querySelectorAll('.logic-tf-card');
+          timeframeGrid.innerHTML = '';
+          cards.forEach(function(card) {
+            timeframeGrid.appendChild(card.cloneNode(true));
+          });
+
+          // Show header timeframe row
+          headerTimeframeRow.classList.remove('hidden');
+
+          // Hide original wrapper in page
+          originalTimeframeWrapper.style.display = 'none';
+        }
+
+        // Refresh data
+        if (typeof window.fetchLogicData === 'function') {
+          window.fetchLogicData();
+        }
+
+        // Re-attach click handlers to cloned cards
+        document.querySelectorAll('#timeframeGrid .logic-tf-card').forEach(function(card) {
+          card.addEventListener('click', function() {
+            var tf = this.dataset.tf;
+            window.currentTimeframe = tf;
+
+            document.querySelectorAll('.logic-tf-card').forEach(function(c) {
+              c.classList.remove('selected');
+            });
+            this.classList.add('selected');
+
+            if (window.logicData && window.logicData[window.currentTimeframe]) {
+              window.updateLogicDisplay(window.logicData[window.currentTimeframe]);
+            }
+            window.updateTimeframeCards(window.logicData || {});
+          });
+        });
+      } else {
+        // Hide timeframe row for other pages
+        document.body.classList.remove('dashboard-active', 'header-compact');
+        if (headerTimeframeRow) {
+          headerTimeframeRow.classList.add('hidden');
+        }
+        if (originalTimeframeWrapper) {
+          originalTimeframeWrapper.style.display = '';
+        }
+      }
+
       window.scrollTo(0, 0);
     }
 
-    function toggleDarkMode() {
-      document.documentElement.classList.toggle('dark');
-      localStorage.setItem('darkMode', document.documentElement.classList.contains('dark'));
+    // Color Theme System - 3 colors: orange, purple, green
+    var colorThemes = {
+      orange: { hex: '#FFB76A', r: 255, g: 183, b: 106 },
+      purple: { hex: '#9696FF', r: 150, g: 150, b: 255 },
+      green: { hex: '#01F0B9', r: 1, g: 240, b: 185 }
+    };
+    var themeOrder = ['orange', 'purple', 'green'];
+    var currentThemeIdx = 0;
+
+    function applyColorTheme(themeName) {
+      var theme = colorThemes[themeName];
+      if (!theme) return;
+      var root = document.documentElement;
+
+      // Only update CSS variables - no inline styles!
+      // CSS variables propagate automatically to all elements
+      root.style.setProperty('--accent-color', theme.hex);
+      root.style.setProperty('--accent-r', theme.r);
+      root.style.setProperty('--accent-g', theme.g);
+      root.style.setProperty('--accent-b', theme.b);
+      root.style.setProperty('--accent-glow', 'rgba(' + theme.r + ',' + theme.g + ',' + theme.b + ',0.8)');
+      root.style.setProperty('--accent-glow-soft', 'rgba(' + theme.r + ',' + theme.g + ',' + theme.b + ',0.4)');
+
+      // Update chart if exists (Chart.js doesn't use CSS variables)
       if (window.pnlChart) { window.pnlChart.destroy(); initChart(); }
     }
-    if (localStorage.getItem('darkMode') === 'true') document.documentElement.classList.add('dark');
+
+    function cycleColorTheme() {
+      currentThemeIdx = (currentThemeIdx + 1) % themeOrder.length;
+      var nextTheme = themeOrder[currentThemeIdx];
+      applyColorTheme(nextTheme);
+      localStorage.setItem('colorTheme', nextTheme);
+    }
+
+    // Always dark mode + load saved color theme
+    document.documentElement.classList.add('dark');
+    var savedTheme = localStorage.getItem('colorTheme') || 'orange';
+    currentThemeIdx = themeOrder.indexOf(savedTheme);
+    if (currentThemeIdx === -1) currentThemeIdx = 0;
+
+    // Apply theme after DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function() { applyColorTheme(savedTheme); });
+    } else {
+      applyColorTheme(savedTheme);
+    }
 
     (function() {
       if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
@@ -800,12 +1000,13 @@
         document.getElementById('data-side').textContent = d.side || '';
         document.getElementById('home-header-uptime').textContent = d.uptime || '--';
         document.getElementById('data-pnl').textContent = d.pnl || '';
+        document.getElementById('data-apy').textContent = d.apy || '--';
         document.getElementById('data-lev').textContent = d.lev || '';
         document.getElementById('data-mrg').textContent = d.mrg || '';
         document.getElementById('data-liq').textContent = d.liq || '';
-        document.getElementById('data-risk').textContent = d.risk || '';
-        document.getElementById('data-market').textContent = d.market || '';
-        document.getElementById('data-summary').textContent = d.summary || '';
+        document.getElementById('home-data-risk').textContent = d.risk || '--';
+        document.getElementById('home-data-market').textContent = d.market || '--';
+        document.getElementById('home-data-summary').textContent = d.summary || '--';
         document.getElementById('home-latest-trade').textContent = d.summary || 'No trade summary available';
         document.getElementById('home-latest-trade-date').textContent = d.last || '--';
         document.getElementById('home-latest-trade-action').textContent = d.action || '--';
@@ -839,16 +1040,18 @@
         var ctx = document.getElementById('pnlChart').getContext('2d');
         var isDark = document.documentElement.classList.contains('dark');
 
-        var accentColor = '#FBAD60'; // RGB 251, 173, 96
-        var glowColor = 'rgba(251, 173, 96, 0.8)';
+        // Get current theme colors
+        var currentTheme = colorThemes[themeOrder[currentThemeIdx]];
+        var accentColor = currentTheme.hex;
+        var glowColor = 'rgba(' + currentTheme.r + ',' + currentTheme.g + ',' + currentTheme.b + ',0.8)';
         var textColor = isDark ? '#e0e0e0' : '#4a4a4a';
         var subColor = isDark ? '#a0a0a0' : '#8d8d8d';
         var gridColor = isDark ? 'rgba(160,160,160,0.1)' : 'rgba(141,141,141,0.15)';
         var bgColor = isDark ? '#292929' : '#efeee9';
 
         var gradient = ctx.createLinearGradient(0, 0, 0, 280);
-        gradient.addColorStop(0, 'rgba(251, 173, 96, 0.3)');
-        gradient.addColorStop(1, 'rgba(251, 173, 96, 0)');
+        gradient.addColorStop(0, 'rgba(' + currentTheme.r + ',' + currentTheme.g + ',' + currentTheme.b + ',0.3)');
+        gradient.addColorStop(1, 'rgba(' + currentTheme.r + ',' + currentTheme.g + ',' + currentTheme.b + ',0)');
 
         var pulseTime = 0;
         var glowPlugin = {
@@ -1022,18 +1225,18 @@
             if (progress * targetWord.length > i) {
               // Lettera in fase di reveal
 
-              // Applica glow arancione quando la lettera INIZIA lo scramble
+              // Applica glow con colore tema quando la lettera INIZIA lo scramble
               if (!charGlowApplied[i]) {
                 (function(span) {
-                  // Applica colore arancione con GLOW INTENSO immediatamente
+                  var theme = colorThemes[themeOrder[currentThemeIdx]];
+                  var rgb = theme.r + ',' + theme.g + ',' + theme.b;
                   span.style.transition = 'none';
-                  span.style.color = '#FBAD60';
-                  span.style.textShadow = '0 0 12px rgba(251, 173, 96, 1), 0 0 20px rgba(251, 173, 96, 0.8)';
+                  span.style.color = theme.hex;
+                  span.style.textShadow = '0 0 12px rgba(' + rgb + ',1), 0 0 20px rgba(' + rgb + ',0.8)';
 
-                  // Dopo 100ms, riduce il glow a normale
                   setTimeout(function() {
                     span.style.transition = 'text-shadow 0.3s ease-out';
-                    span.style.textShadow = '0 0 4px rgba(251, 173, 96, 0.5)';
+                    span.style.textShadow = '0 0 4px rgba(' + rgb + ',0.5)';
                   }, 100);
                 })(charSpans[i]);
                 charGlowApplied[i] = true;
@@ -1089,11 +1292,112 @@
       });
     })();
 
+    // Header Anomaly Scramble Effect
+    (function() {
+      var targetWord = 'Anomaly';
+      var scrambleContainer = document.getElementById('header-anomaly-word');
+      var isAnimating = false;
+      var characterSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
+      var duration = 3.0;
+      var speed = 0.08;
+
+      function getRandomChar() {
+        return characterSet[Math.floor(Math.random() * characterSet.length)];
+      }
+
+      function scrambleHeader() {
+        if (isAnimating) return;
+        isAnimating = true;
+
+        scrambleContainer.innerHTML = '';
+        var charSpans = [];
+        var charRevealed = [];
+        var charGlowApplied = [];
+
+        for (var i = 0; i < targetWord.length; i++) {
+          var span = document.createElement('span');
+          span.textContent = targetWord[i];
+          scrambleContainer.appendChild(span);
+          charSpans.push(span);
+          charRevealed.push(false);
+          charGlowApplied.push(false);
+        }
+
+        var steps = duration / speed;
+        var step = 0;
+
+        var interval = setInterval(function() {
+          var progress = step / steps;
+
+          for (var i = 0; i < targetWord.length; i++) {
+            if (targetWord[i] === ' ') continue;
+
+            if (progress * targetWord.length > i) {
+              if (!charGlowApplied[i]) {
+                (function(span) {
+                  var theme = colorThemes[themeOrder[currentThemeIdx]];
+                  var rgb = theme.r + ',' + theme.g + ',' + theme.b;
+                  span.style.transition = 'none';
+                  span.style.color = theme.hex;
+                  span.style.textShadow = '0 0 12px rgba(' + rgb + ',1), 0 0 20px rgba(' + rgb + ',0.8)';
+
+                  setTimeout(function() {
+                    span.style.transition = 'text-shadow 0.3s ease-out';
+                    span.style.textShadow = '0 0 4px rgba(' + rgb + ',0.5)';
+                  }, 100);
+                })(charSpans[i]);
+                charGlowApplied[i] = true;
+              }
+
+              if (!charRevealed[i]) {
+                charSpans[i].textContent = targetWord[i];
+                charRevealed[i] = true;
+
+                (function(span) {
+                  setTimeout(function() {
+                    span.style.transition = 'color 10s ease-out, text-shadow 10s ease-out';
+                    span.style.color = '';
+                    span.style.textShadow = '';
+                  }, 150);
+                })(charSpans[i]);
+              }
+            } else {
+              charSpans[i].textContent = getRandomChar();
+            }
+          }
+
+          step++;
+          if (step > steps) {
+            clearInterval(interval);
+            isAnimating = false;
+          }
+        }, speed * 1000);
+      }
+
+      window.addEventListener('DOMContentLoaded', function() {
+        scrambleContainer.innerHTML = '';
+        for (var i = 0; i < targetWord.length; i++) {
+          var span = document.createElement('span');
+          span.textContent = targetWord[i];
+          span.style.color = 'var(--accent-color)';
+          scrambleContainer.appendChild(span);
+        }
+
+        setTimeout(function() {
+          scrambleHeader();
+        }, 800);
+
+        setInterval(function() {
+          scrambleHeader();
+        }, 60000);
+      });
+    })();
+
     // Logic Page Functionality
     (function() {
       var LOGIC_API_URL = 'https://305b3ad600d3.ngrok-free.app/webhook/logic';
-      var logicData = null;
-      var currentTimeframe = 'daily';
+      window.logicData = null;
+      window.currentTimeframe = 'daily';
 
       // Get direction icon based on direction string
       function getDirectionIcon(direction) {
@@ -1112,7 +1416,7 @@
       }
 
       // Update the main display for selected timeframe
-      function updateLogicDisplay(tfData) {
+      window.updateLogicDisplay = function(tfData) {
         if (!tfData) return;
 
         // Indicators
@@ -1205,7 +1509,7 @@
 
           if (eventsArray.length > 0) {
             eventsEl.innerHTML = eventsArray.map(function(e) {
-              return '<li class="text-sm text-text-sub-light dark:text-text-sub-dark flex items-start"><span class="material-icons-round text-xs text-primary-glow mr-2 mt-0.5">schedule</span>' + e + '</li>';
+              return '<li class="text-sm text-text-sub-light dark:text-text-sub-dark flex items-start"><span class="text-primary-glow mr-2">∙</span>' + e + '</li>';
             }).join('');
           } else {
             eventsEl.innerHTML = '<li class="text-sm text-text-sub-light dark:text-text-sub-dark">No events available</li>';
@@ -1220,10 +1524,10 @@
         } else {
           document.getElementById('cot-summary').textContent = 'No COT analysis available';
         }
-      }
+      };
 
       // Update timeframe comparison cards
-      function updateTimeframeCards(data) {
+      window.updateTimeframeCards = function(data) {
         var timeframes = ['daily', 'weekly', 'monthly'];
         timeframes.forEach(function(tf) {
           var tfData = data[tf];
@@ -1263,85 +1567,123 @@
 
             // Update dots (always visible, but only active if selected)
             dots.forEach(function(dot, idx) {
-              if (tf === currentTimeframe && idx < dotsToActivate) {
+              if (tf === window.currentTimeframe && idx < dotsToActivate) {
                 dot.classList.add('active');
               } else {
                 dot.classList.remove('active');
               }
             });
 
-            // Color based on selection (icons always gray, only label and text change)
-            if (tf === currentTimeframe) {
-              // Selected: label and confidence orange, icon gray
-              cardEl.classList.add('shadow-neu-pressed-light', 'dark:shadow-neu-pressed-dark');
+            // Color based on selection
+            if (tf === window.currentTimeframe) {
+              // Selected: label orange, pressed shadow
+              cardEl.classList.add('shadow-neu-pressed-light', 'dark:shadow-neu-pressed-dark', 'selected');
               cardEl.classList.remove('shadow-neu-flat-light', 'dark:shadow-neu-flat-dark');
 
-              labelEl.className = 'text-sm font-bold tracking-wide text-primary-glow mb-2';
+              labelEl.className = 'text-sm font-bold tracking-wide text-primary-glow mb-2 tf-label';
               iconEl.className = 'material-icons-round text-3xl mb-2 text-text-sub-light dark:text-text-sub-dark';
               dirEl.className = 'text-sm font-bold text-primary-glow mb-2';
 
-              // Format confidence text with label
               confTextEl.innerHTML = '<span class="text-text-sub-light dark:text-text-sub-dark">confidence </span><span class="text-primary-glow">' + confidenceText + '</span>';
             } else {
               // Not selected: everything gray
-              cardEl.classList.remove('shadow-neu-pressed-light', 'dark:shadow-neu-pressed-dark');
+              cardEl.classList.remove('shadow-neu-pressed-light', 'dark:shadow-neu-pressed-dark', 'selected');
               cardEl.classList.add('shadow-neu-flat-light', 'dark:shadow-neu-flat-dark');
 
-              labelEl.className = 'text-sm font-bold tracking-wide text-text-sub-light dark:text-text-sub-dark mb-2';
+              labelEl.className = 'text-sm font-bold tracking-wide text-text-sub-light dark:text-text-sub-dark mb-2 tf-label';
               iconEl.className = 'material-icons-round text-3xl mb-2 text-text-sub-light dark:text-text-sub-dark';
               dirEl.className = 'text-sm font-bold text-text-sub-light dark:text-text-sub-dark mb-2';
 
-              // Format confidence text with label (all gray)
               confTextEl.innerHTML = '<span class="text-text-sub-light dark:text-text-sub-dark">confidence ' + confidenceText + '</span>';
             }
           }
         });
-      }
+      };
 
       // Fetch logic data from API
-      function fetchLogicData() {
+      window.fetchLogicData = function() {
         fetch(LOGIC_API_URL, { headers: { 'ngrok-skip-browser-warning': 'true' } })
           .then(function(r) { return r.json(); })
           .then(function(data) {
             // Transform array to object keyed by timeframe
             if (Array.isArray(data)) {
-              logicData = {};
+              window.logicData = {};
               data.forEach(function(item) {
                 if (item.timeframe) {
-                  logicData[item.timeframe] = item;
+                  window.logicData[item.timeframe] = item;
                 }
               });
             } else {
-              logicData = data;
+              window.logicData = data;
             }
 
-            if (logicData[currentTimeframe]) {
-              updateLogicDisplay(logicData[currentTimeframe]);
+            if (window.logicData[window.currentTimeframe]) {
+              window.updateLogicDisplay(window.logicData[window.currentTimeframe]);
             }
-            updateTimeframeCards(logicData);
+            window.updateTimeframeCards(window.logicData);
           })
           .catch(function(err) {
             console.error('Error fetching logic data:', err);
             document.getElementById('logic-thesis').textContent = 'Unable to load market logic data';
           });
-      }
+      };
 
       // Timeframe card click handlers
       document.querySelectorAll('.logic-tf-card').forEach(function(card) {
         card.addEventListener('click', function() {
           var tf = this.dataset.tf;
-          currentTimeframe = tf;
+          window.currentTimeframe = tf;
 
-          if (logicData && logicData[currentTimeframe]) {
-            updateLogicDisplay(logicData[currentTimeframe]);
+          // Update selected class
+          document.querySelectorAll('.logic-tf-card').forEach(function(c) {
+            c.classList.remove('selected');
+          });
+          this.classList.add('selected');
+
+          if (window.logicData && window.logicData[window.currentTimeframe]) {
+            window.updateLogicDisplay(window.logicData[window.currentTimeframe]);
           }
-          updateTimeframeCards(logicData || {});
+          window.updateTimeframeCards(window.logicData || {});
         });
       });
 
+      // Header compact on scroll with hysteresis
+      var mainHeader = document.getElementById('mainHeader');
+      var isCompact = false;
+      var compactThreshold = 10;
+      var expandThreshold = 5;
+
+      function handleHeaderScroll() {
+        if (!document.body.classList.contains('dashboard-active')) return;
+
+        var scrollY = window.scrollY || window.pageYOffset;
+
+        if (!isCompact && scrollY > compactThreshold) {
+          isCompact = true;
+          mainHeader.classList.add('compact');
+          document.body.classList.add('header-compact');
+        } else if (isCompact && scrollY < expandThreshold) {
+          isCompact = false;
+          mainHeader.classList.remove('compact');
+          document.body.classList.remove('header-compact');
+        }
+      }
+
+      // Use requestAnimationFrame for smoother updates
+      var scrollTicking = false;
+      window.addEventListener('scroll', function() {
+        if (!scrollTicking) {
+          requestAnimationFrame(function() {
+            handleHeaderScroll();
+            scrollTicking = false;
+          });
+          scrollTicking = true;
+        }
+      }, { passive: true });
+
       // Fetch data on page load
       window.addEventListener('DOMContentLoaded', function() {
-        fetchLogicData();
+        window.fetchLogicData();
       });
     })();
   </script>

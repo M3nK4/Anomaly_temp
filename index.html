@@ -461,7 +461,7 @@
         </nav>
 
           <!-- Theme toggle (always on the right) -->
-          <button onclick="cycleColorTheme()" class="w-10 h-10 rounded-xl flex items-center justify-center shadow-neu-icon-light dark:shadow-neu-icon-dark hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow bg-background-light dark:bg-background-dark">
+          <button onclick="cycleColorTheme(event)" class="w-10 h-10 rounded-xl flex items-center justify-center shadow-neu-icon-light dark:shadow-neu-icon-dark hover:shadow-neu-pressed-light dark:hover:shadow-neu-pressed-dark transition-shadow bg-background-light dark:bg-background-dark">
             <span class="material-icons-round text-text-sub-light dark:text-text-sub-dark text-xl">brush</span>
           </button>
         </div>
@@ -488,13 +488,13 @@
           <div class="p-6 rounded-[2rem] shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
             <!-- Project Title - Mobile Only -->
             <div class="mb-4 md:hidden">
-              <div id="typewriter-mobile-container" style="margin: 0 auto; transform: translateX(1rem);">
+              <div id="typewriter-mobile-container" style="margin: 0 auto; transform: translateX(0.5rem);">
                 <p class="text-sm font-bold mb-0 text-primary-glow" style="text-align: left; white-space: nowrap;" id="typewriter-mobile"></p>
               </div>
             </div>
             <!-- Project Title - Tablet Only (above PNL) -->
             <div class="mb-3 hidden md:block lg:hidden">
-              <div id="typewriter-tablet-container" style="margin: 0 auto; transform: translateX(1rem);">
+              <div id="typewriter-tablet-container" style="margin: 0 auto; transform: translateX(0.5rem);">
                 <p class="text-lg font-bold text-primary-glow whitespace-nowrap" style="text-align: left;" id="typewriter-tablet"></p>
               </div>
             </div>
@@ -981,11 +981,15 @@
       if (window.pnlChart) { window.pnlChart.destroy(); initChart(); }
     }
 
-    function cycleColorTheme() {
+    function cycleColorTheme(event) {
       currentThemeIdx = (currentThemeIdx + 1) % themeOrder.length;
       var nextTheme = themeOrder[currentThemeIdx];
       applyColorTheme(nextTheme);
       localStorage.setItem('colorTheme', nextTheme);
+      // Remove focus from button to prevent pressed state on mobile
+      if (event && event.target) {
+        event.target.blur();
+      }
     }
 
     // Always dark mode + load saved color theme

@@ -151,8 +151,11 @@
     }
     @media (max-width: 640px) {
       .progress-container {
-        flex-direction: column;
         gap: 1rem;
+      }
+      .progress-container .text-\[10px\] {
+        font-size: 9px;
+        line-height: 1.3;
       }
     }
     .progress-track {
@@ -270,6 +273,12 @@
     .indicator-dot.active {
       background: var(--accent-color);
       box-shadow: 0 0 8px var(--accent-glow);
+    }
+    .indicator-dot.semi-active {
+      background: #6a6a6a;
+    }
+    .dark .indicator-dot.semi-active {
+      background: #5a5a5a;
     }
 
     /* Segment Indicators (Bipolar: -2, -1, 0, 1, 2) */
@@ -423,6 +432,13 @@
       color: var(--accent-color);
       text-shadow: 0 0 12px var(--accent-glow);
     }
+
+    /* Direction icon glow when timeframe is selected */
+    .direction-icon-glow {
+      filter: drop-shadow(0 0 3px rgba(var(--accent-r), var(--accent-g), var(--accent-b), 1))
+              drop-shadow(0 0 5px rgba(var(--accent-r), var(--accent-g), var(--accent-b), 1));
+      color: #333333 !important;
+    }
   </style>
 </head>
 <body class="bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark transition-colors duration-300 min-h-screen">
@@ -545,6 +561,58 @@
           </div>
         </div>
 
+        <!-- Wallet Overview -->
+        <div class="mb-8">
+          <div class="p-6 rounded-[2rem] shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
+            <div class="text-center mb-4">
+              <span class="text-xs font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark">Wallet Balance</span>
+              <p class="text-3xl font-extrabold text-primary-glow" id="data-value">$0.00</p>
+            </div>
+            <!-- Stats: Side, PNL, APY, Leverage -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+              <div class="p-3 rounded-xl shadow-neu-pressed-light dark:shadow-neu-pressed-dark bg-background-light dark:bg-background-dark text-center">
+                <p class="text-[10px] font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark">Side</p>
+                <p class="text-lg font-extrabold text-primary-glow" id="data-side">--</p>
+              </div>
+              <div class="p-3 rounded-xl shadow-neu-pressed-light dark:shadow-neu-pressed-dark bg-background-light dark:bg-background-dark text-center">
+                <p class="text-[10px] font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark">PNL</p>
+                <p class="text-lg font-extrabold text-primary-glow" id="data-pnl">--</p>
+              </div>
+              <div class="p-3 rounded-xl shadow-neu-pressed-light dark:shadow-neu-pressed-dark bg-background-light dark:bg-background-dark text-center">
+                <p class="text-[10px] font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark">APY</p>
+                <p class="text-lg font-extrabold text-primary-glow" id="data-apy">--</p>
+              </div>
+              <div class="p-3 rounded-xl shadow-neu-pressed-light dark:shadow-neu-pressed-dark bg-background-light dark:bg-background-dark text-center">
+                <p class="text-[10px] font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark">Leverage</p>
+                <p class="text-lg font-extrabold text-primary-glow" id="data-lev">--</p>
+              </div>
+            </div>
+            <!-- Progress Bars -->
+            <div class="progress-container mt-6">
+              <div class="flex-1">
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="text-xs font-bold text-text-main-light dark:text-text-main-dark">Margin</span>
+                  <span class="text-xs font-bold text-primary-glow" id="data-mrg">0%</span>
+                </div>
+                <div class="progress-track mb-2">
+                  <div class="progress-fill" id="data-mrg-bar" style="width: 0%"></div>
+                </div>
+                <p class="text-[10px] text-text-sub-light dark:text-text-sub-dark">margin consumed by the BTC position</p>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="text-xs font-bold text-text-main-light dark:text-text-main-dark">Liquidation</span>
+                  <span class="text-xs font-bold text-primary-glow" id="data-liq">0%</span>
+                </div>
+                <div class="progress-track mb-2">
+                  <div class="progress-fill" id="data-liq-bar" style="width: 0%"></div>
+                </div>
+                <p class="text-[10px] text-text-sub-light dark:text-text-sub-dark">distance to liquidation threshold</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Trade Details Cards -->
         <div class="mb-8">
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -578,7 +646,7 @@
 
         <!-- Timeframe Selector (Granularity) - Sticky on scroll -->
         <div class="mb-6 timeframe-sticky-wrapper" id="timeframeStickyWrapper">
-          <div class="p-4 rounded-[2rem] shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark timeframe-selector" id="timeframeSelector">
+          <div class="p-4 rounded-[2rem] shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark timeframe-selector" id="timeframeSelectorDashboard">
             <div class="grid grid-cols-3 gap-3">
               <!-- Daily -->
               <div class="p-3 rounded-xl text-center logic-tf-card shadow-neu-flat-light dark:shadow-neu-flat-dark cursor-pointer selected" data-tf="daily">
@@ -621,58 +689,6 @@
                   </div>
                   <p class="text-[10px] font-semibold text-text-sub-light dark:text-text-sub-dark" id="tf-monthly-conf-text">--</p>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Wallet Overview -->
-        <div class="mb-6 content-below-selector">
-          <div class="p-6 rounded-[2rem] shadow-neu-flat-light dark:shadow-neu-flat-dark bg-background-light dark:bg-background-dark">
-            <div class="text-center mb-4">
-              <span class="text-xs font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark">Wallet Balance</span>
-              <p class="text-3xl font-extrabold text-primary-glow" id="data-value">$0.00</p>
-            </div>
-            <!-- Stats: Side, PNL, APY, Leverage -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
-              <div class="p-3 rounded-xl shadow-neu-pressed-light dark:shadow-neu-pressed-dark bg-background-light dark:bg-background-dark text-center">
-                <p class="text-[10px] font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark">Side</p>
-                <p class="text-lg font-extrabold text-primary-glow" id="data-side">--</p>
-              </div>
-              <div class="p-3 rounded-xl shadow-neu-pressed-light dark:shadow-neu-pressed-dark bg-background-light dark:bg-background-dark text-center">
-                <p class="text-[10px] font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark">PNL</p>
-                <p class="text-lg font-extrabold text-primary-glow" id="data-pnl">--</p>
-              </div>
-              <div class="p-3 rounded-xl shadow-neu-pressed-light dark:shadow-neu-pressed-dark bg-background-light dark:bg-background-dark text-center">
-                <p class="text-[10px] font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark">APY</p>
-                <p class="text-lg font-extrabold text-primary-glow" id="data-apy">--</p>
-              </div>
-              <div class="p-3 rounded-xl shadow-neu-pressed-light dark:shadow-neu-pressed-dark bg-background-light dark:bg-background-dark text-center">
-                <p class="text-[10px] font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark">Leverage</p>
-                <p class="text-lg font-extrabold text-primary-glow" id="data-lev">--</p>
-              </div>
-            </div>
-            <!-- Progress Bars -->
-            <div class="progress-container mt-8">
-              <div class="flex-1">
-                <div class="flex items-center gap-2 mb-2">
-                  <span class="text-xs font-bold text-text-main-light dark:text-text-main-dark">Margin</span>
-                  <span class="text-xs font-bold text-primary-glow" id="data-mrg">0%</span>
-                </div>
-                <div class="progress-track mb-2">
-                  <div class="progress-fill" id="data-mrg-bar" style="width: 0%"></div>
-                </div>
-                <p class="text-[10px] text-text-sub-light dark:text-text-sub-dark">margin consumed by the BTC position specifically</p>
-              </div>
-              <div class="flex-1">
-                <div class="flex items-center gap-2 mb-2">
-                  <span class="text-xs font-bold text-text-main-light dark:text-text-main-dark">Liquidation</span>
-                  <span class="text-xs font-bold text-primary-glow" id="data-liq">0%</span>
-                </div>
-                <div class="progress-track mb-2">
-                  <div class="progress-fill" id="data-liq-bar" style="width: 0%"></div>
-                </div>
-                <p class="text-[10px] text-text-sub-light dark:text-text-sub-dark">distance between the current market price and the liquidation threshold price</p>
               </div>
             </div>
           </div>
@@ -1055,15 +1071,28 @@
       window.fetchChartData = function(tf) {
         var url = tf && tf !== 'ALL' ? CHART_API_URL + '?timeframe=' + tf.toLowerCase() : CHART_API_URL;
         fetch(url, { headers: { 'ngrok-skip-browser-warning': 'true' } })
-          .then(r => r.json())
+          .then(function(r) {
+            if (!r.ok) throw new Error('Network response was not ok');
+            return r.json();
+          })
           .then(function(data) {
-            if (!window.pnlChart || !data.labels) return;
+            if (!window.pnlChart) {
+              console.error('Chart not initialized');
+              return;
+            }
+            if (!data || !data.labels || !data.values) {
+              console.error('Invalid chart data received:', data);
+              return;
+            }
             window.pnlChart.data.labels = data.labels.map(function(ts) {
               var d = new Date(ts);
               return (d.getMonth()+1) + '/' + d.getDate() + ' ' + d.getHours() + ':' + (d.getMinutes()<10?'0':'') + d.getMinutes();
             });
             window.pnlChart.data.datasets[0].data = data.values;
             window.pnlChart.update();
+          })
+          .catch(function(err) {
+            console.error('Error fetching chart data for timeframe ' + tf + ':', err);
           });
       };
 
@@ -1211,6 +1240,10 @@
     (function() {
       var targetWord = 'Anomaly';
       var scrambleContainer = document.getElementById('scramble-word');
+
+      // Skip if element doesn't exist
+      if (!scrambleContainer) return;
+
       var isAnimating = false;
 
       // Character set per lo scramble
@@ -1674,8 +1707,8 @@
 
           if (narrativesArray.length > 0) {
             narrativesEl.innerHTML = narrativesArray.map(function(n, idx) {
-              var separator = idx < narrativesArray.length - 1 ? '<span class="text-primary-glow mx-2">∙</span>' : '';
-              return '<span class="text-sm text-text-sub-light dark:text-text-sub-dark inline">' + n + '</span>' + separator;
+              var separator = idx < narrativesArray.length - 1 ? '<span class="text-primary-glow mx-2" style="font-size: 1.2em; display: inline-block; vertical-align: middle; transform: translateY(-0.1em);">∙</span>' : '';
+              return '<span class="text-sm text-text-sub-light dark:text-text-sub-dark inline" style="display: inline-block; vertical-align: middle;">' + n + '</span>' + separator;
             }).join('');
           } else {
             narrativesEl.innerHTML = '<span class="text-sm text-text-sub-light dark:text-text-sub-dark">No narratives available</span>';
@@ -1751,21 +1784,24 @@
 
             // Update dots (always visible, but only active if selected)
             dots.forEach(function(dot, idx) {
-              if (tf === window.currentTimeframe && idx < dotsToActivate) {
-                dot.classList.add('active');
-              } else {
-                dot.classList.remove('active');
+              dot.classList.remove('active', 'semi-active');
+              if (idx < dotsToActivate) {
+                if (tf === window.currentTimeframe) {
+                  dot.classList.add('active');
+                } else {
+                  dot.classList.add('semi-active');
+                }
               }
             });
 
             // Color based on selection
             if (tf === window.currentTimeframe) {
-              // Selected: label orange, pressed shadow
+              // Selected: label orange, pressed shadow, icon glow
               cardEl.classList.add('shadow-neu-pressed-light', 'dark:shadow-neu-pressed-dark', 'selected');
               cardEl.classList.remove('shadow-neu-flat-light', 'dark:shadow-neu-flat-dark');
 
               labelEl.className = 'text-sm font-bold tracking-wide text-primary-glow mb-2 tf-label';
-              iconEl.className = 'material-icons-round text-3xl mb-2 text-text-sub-light dark:text-text-sub-dark';
+              iconEl.className = 'material-icons-round text-3xl mb-2 text-text-sub-light dark:text-text-sub-dark direction-icon-glow';
               dirEl.className = 'text-sm font-bold text-primary-glow mb-2';
 
               confTextEl.innerHTML = '<span class="text-text-sub-light dark:text-text-sub-dark">confidence </span><span class="text-primary-glow">' + confidenceText + '</span>';

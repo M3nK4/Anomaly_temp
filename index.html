@@ -1068,9 +1068,54 @@
         .then(populateData)
         .catch(showError);
 
+      // Store all chart data for client-side filtering
+      window.allChartData = null;
+
+      // Helper function to filter and display chart data based on timeframe
+      function filterAndDisplayChartData(tf) {
+        if (!window.allChartData || !window.pnlChart) return;
+
+        var data = window.allChartData;
+        var filteredLabels = [];
+        var filteredValues = [];
+        var now = new Date();
+        var cutoffMs = null;
+
+        // Calculate cutoff time based on timeframe
+        if (tf === '1W') {
+          cutoffMs = 7 * 24 * 60 * 60 * 1000; // 7 days in ms
+        } else if (tf === '1M') {
+          cutoffMs = 30 * 24 * 60 * 60 * 1000; // 30 days in ms
+        }
+        // ALL = no filtering (cutoffMs remains null)
+
+        // Filter data based on timeframe
+        for (var i = 0; i < data.labels.length; i++) {
+          var labelDate = new Date(data.labels[i]);
+          if (cutoffMs === null || (now - labelDate) <= cutoffMs) {
+            filteredLabels.push(data.labels[i]);
+            filteredValues.push(data.values[i]);
+          }
+        }
+
+        // Format labels and update chart
+        window.pnlChart.data.labels = filteredLabels.map(function(ts) {
+          var d = new Date(ts);
+          return (d.getMonth()+1) + '/' + d.getDate() + ' ' + d.getHours() + ':' + (d.getMinutes()<10?'0':'') + d.getMinutes();
+        });
+        window.pnlChart.data.datasets[0].data = filteredValues;
+        window.pnlChart.update();
+      }
+
       window.fetchChartData = function(tf) {
-        var url = tf && tf !== 'ALL' ? CHART_API_URL + '?timeframe=' + tf.toLowerCase() : CHART_API_URL;
-        fetch(url, { headers: { 'ngrok-skip-browser-warning': 'true' } })
+        // If we already have cached data, just filter and display
+        if (window.allChartData) {
+          filterAndDisplayChartData(tf);
+          return;
+        }
+
+        // Fetch all data from API (without timeframe param - filtering is done client-side)
+        fetch(CHART_API_URL, { headers: { 'ngrok-skip-browser-warning': 'true' } })
           .then(function(r) {
             if (!r.ok) throw new Error('Network response was not ok');
             return r.json();
@@ -1084,15 +1129,13 @@
               console.error('Invalid chart data received:', data);
               return;
             }
-            window.pnlChart.data.labels = data.labels.map(function(ts) {
-              var d = new Date(ts);
-              return (d.getMonth()+1) + '/' + d.getDate() + ' ' + d.getHours() + ':' + (d.getMinutes()<10?'0':'') + d.getMinutes();
-            });
-            window.pnlChart.data.datasets[0].data = data.values;
-            window.pnlChart.update();
+            // Cache all data for future filtering
+            window.allChartData = data;
+            // Filter and display based on selected timeframe
+            filterAndDisplayChartData(tf);
           })
           .catch(function(err) {
-            console.error('Error fetching chart data for timeframe ' + tf + ':', err);
+            console.error('Error fetching chart data:', err);
           });
       };
 

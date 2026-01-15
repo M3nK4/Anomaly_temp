@@ -535,9 +535,9 @@
                 </div>
               </div>
               <div class="flex space-x-2">
-                <button class="timeframe-btn px-3 py-1.5 rounded-xl text-[10px] font-bold shadow-neu-pressed-light dark:shadow-neu-pressed-dark text-primary-glow bg-background-light dark:bg-background-dark active" data-timeframe="ALL">ALL</button>
+                <button class="timeframe-btn px-3 py-1.5 rounded-xl text-[10px] font-bold shadow-neu-flat-light dark:shadow-neu-flat-dark text-text-sub-light dark:text-text-sub-dark hover:text-primary-glow transition-colors bg-background-light dark:bg-background-dark" data-timeframe="ALL">ALL</button>
                 <button class="timeframe-btn px-3 py-1.5 rounded-xl text-[10px] font-bold shadow-neu-flat-light dark:shadow-neu-flat-dark text-text-sub-light dark:text-text-sub-dark hover:text-primary-glow transition-colors bg-background-light dark:bg-background-dark" data-timeframe="1M">1M</button>
-                <button class="timeframe-btn px-3 py-1.5 rounded-xl text-[10px] font-bold shadow-neu-flat-light dark:shadow-neu-flat-dark text-text-sub-light dark:text-text-sub-dark hover:text-primary-glow transition-colors bg-background-light dark:bg-background-dark" data-timeframe="1W">1W</button>
+                <button class="timeframe-btn px-3 py-1.5 rounded-xl text-[10px] font-bold shadow-neu-pressed-light dark:shadow-neu-pressed-dark text-primary-glow bg-background-light dark:bg-background-dark active" data-timeframe="1W">1W</button>
               </div>
             </div>
             <div class="h-64 md:h-80 lg:h-96">
@@ -568,23 +568,23 @@
               <span class="text-xs font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark">Wallet Balance</span>
               <p class="text-3xl font-extrabold text-primary-glow" id="data-value">$0.00</p>
             </div>
-            <!-- Stats: Side, PNL, APY, Leverage -->
+            <!-- Stats: Side, Leverage, APY, PNL -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
               <div class="p-3 rounded-xl shadow-neu-pressed-light dark:shadow-neu-pressed-dark bg-background-light dark:bg-background-dark text-center">
                 <p class="text-[10px] font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark">Side</p>
                 <p class="text-lg font-extrabold text-primary-glow" id="data-side">--</p>
               </div>
               <div class="p-3 rounded-xl shadow-neu-pressed-light dark:shadow-neu-pressed-dark bg-background-light dark:bg-background-dark text-center">
-                <p class="text-[10px] font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark">PNL</p>
-                <p class="text-lg font-extrabold text-primary-glow" id="data-pnl">--</p>
+                <p class="text-[10px] font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark">Leverage</p>
+                <p class="text-lg font-extrabold text-primary-glow" id="data-lev">--</p>
               </div>
               <div class="p-3 rounded-xl shadow-neu-pressed-light dark:shadow-neu-pressed-dark bg-background-light dark:bg-background-dark text-center">
                 <p class="text-[10px] font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark">APY</p>
                 <p class="text-lg font-extrabold text-primary-glow" id="data-apy">--</p>
               </div>
               <div class="p-3 rounded-xl shadow-neu-pressed-light dark:shadow-neu-pressed-dark bg-background-light dark:bg-background-dark text-center">
-                <p class="text-[10px] font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark">Leverage</p>
-                <p class="text-lg font-extrabold text-primary-glow" id="data-lev">--</p>
+                <p class="text-[10px] font-bold uppercase tracking-wider text-text-sub-light dark:text-text-sub-dark">PNL</p>
+                <p class="text-lg font-extrabold text-primary-glow" id="data-pnl">--</p>
               </div>
             </div>
             <!-- Progress Bars -->
@@ -1260,7 +1260,7 @@
           },
           plugins: [glowPlugin]
         });
-        fetchChartData('ALL');
+        fetchChartData('1W');
 
         // Setup timeframe buttons event listeners
         document.querySelectorAll('.timeframe-btn').forEach(function(btn) {
